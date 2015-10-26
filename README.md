@@ -38,10 +38,11 @@ $ gulp protractor
 
 ## Linting
 This repository uses `eslint` for linting Javascript codes.
+
 + `$ gulp lint` will execute ESLint check.
 + It also uses [ESlint plugin for Angular](https://github.com/Gillespie59/eslint-plugin-angular) for Angular codes.
   - This plugin is based on [Angular Style Guide](https://github.com/johnpapa/angular-styleguide).
 
-## Deploy to Bluemix
+## Deploy to Bluemix, Pivotal Web Services,...
 `$ cf push <appname> -m 512m -c 'gulp_start_server'`
 
