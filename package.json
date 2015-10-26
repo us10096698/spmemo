@@ -1,0 +1,28 @@
+{
+  "name": "myapp",
+  "description": "a minimum-viable express+angular app with tests",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "us10096698",
+  "license": "ISC",
+  "devDependencies": {
+    "body-parser": "^1.14.1",
+    "bower": "^1.6.3",
+    "eslint-config-angular": "^0.4.0",
+    "eslint-plugin-angular": "^0.13.0",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-jasmine": "^2.1.0",
+    "gulp-protractor": "^1.0.0",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.14",
+    "karma-chrome-launcher": "^0.2.1",
+    "karma-jasmine": "^0.3.6",
+    "method-override": "^2.3.5",
+    "request": "^2.65.0"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
