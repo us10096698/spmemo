@@ -1,1 +1,3 @@
-angular.module('myapp',[]);
+'use strict';
+
+angular.module('myapp', []);

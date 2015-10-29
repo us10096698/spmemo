@@ -9,10 +9,10 @@
   <title>template app</title>
 
 </head>
-<body ng-controller="HelloController as hello">
+<body ng-controller="HelloController as vm">
   <div id="greeting"><h1>hello, world!</h1></div>
-  <button id="call" ng-click="hello.setTagline('Did you call me?')">call</button>
-  <button id="ajaxcall" ng-click="hello.process('Did you call me?')">ajax call</button>
-  <p id='tagline'>{{ hello.tagline }}</p>
+  <button id="call" ng-click="vm.setTagline('Did you call me?')">call</button>
+  <button id="ajaxcall" ng-click="vm.process('Did you call me?')">ajax call</button>
+  <p id='tagline'>{{ vm.tagline }}</p>
 </body>
 </html>

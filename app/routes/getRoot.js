@@ -1,6 +1,7 @@
-function getRoot(req, res){
-    'use strict';
-    res.send('processed: ' + req.query.message);
+'use strict';
+
+function getRoot(req, res) {
+  res.send('processed: ' + req.query.message);
 }
 
 module.exports = getRoot;
