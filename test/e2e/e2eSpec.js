@@ -1,7 +1,7 @@
 'use strict';
 var server = require('../../server');
 
-describe('GET /', function() {
+fdescribe('Toppage of the site', function() {
 
   beforeAll(function() {
     server.start();
@@ -15,17 +15,42 @@ describe('GET /', function() {
     browser.get('/');
   });
 
-  it('should return index page with greeting', function() {
-    expect(element(by.id('greeting')).getText()).toEqual('hello, world!');
+  it('should have two textboxs, a button, and a contents table', function() {
+    var titleBox = element(by.id('titlebox'));
+    var docBox = element(by.id('docbox'));
+    var codeBox = element(by.id('codebox'));
+    var addButton = element(by.id('addmemo'));
+    var contentsTbl = element(by.id('contentsTbl'));
+
+    expect(titleBox.isPresent()).toBeTruthy();
+    expect(docBox.isPresent()).toBeTruthy();
+    expect(codeBox.isPresent()).toBeTruthy();
+    expect(addButton.isPresent()).toBeTruthy();
+    expect(addButton.getText()).toEqual('Add');
+    expect(contentsTbl.isPresent()).toBeTruthy();
+    expect(element.all(by.css('tr.item')).count()).toBe(0);
   });
 
-  it('should update tagline when call button clicked', function() {
-    element(by.id('call')).click();
-    expect(element(by.id('tagline')).getText()).toEqual('Did you call me?');
-  });
+  describe('Add button', function() {
+    it('should save a memo item with given info', function() {
+      var addButton = element(by.id('addmemo'));
+      var titleBox = element(by.id('titlebox'));
+      var docBox = element(by.id('docbox'));
+      var codeBox = element(by.id('codebox'));
 
-  it('should update tagline when AJAX call button clicked', function() {
-    element(by.id('ajaxcall')).click();
-    expect(element(by.id('tagline')).getText()).toEqual('processed: Did you call me?');
+      titleBox.sendKeys('title1');
+      docBox.sendKeys('this is a document');
+      codeBox.sendKeys('var i = 0;');
+      addButton.click();
+
+      expect(element.all(by.css('tr.item')).count()).toBe(1);
+
+      var memo1 = element(by.css("tr[id='title1']"));
+
+      expect(memo1.element(by.css('.title')).getText()).toEqual('title1');
+      expect(memo1.element(by.css('.doc')).getText()).toEqual('this is a document');
+      expect(memo1.element(by.css('.code')).getText()).toEqual('var i = 0;');
+
+    });
   });
 });
