@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('myapp', []);
+angular.module('spmemo', []);

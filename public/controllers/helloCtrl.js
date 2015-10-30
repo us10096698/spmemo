@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myapp')
+angular.module('spmemo')
     .controller('HelloController', HelloController);
 
 HelloController.$inject = ['$http'];
