@@ -7,6 +7,7 @@ var protractor = require('gulp-protractor').protractor;
 var webdriver_update = require('gulp-protractor').webdriver_update;
 var server = require( __dirname + '/server.js');
 var eslint = require('gulp-eslint');
+var sass = require('gulp-sass');
 
 gulp.task('start_server', function() {
   server.start();
@@ -48,4 +49,14 @@ gulp.task('lint', function() {
   .pipe(eslint())
   .pipe(eslint.format())
   .pipe(eslint.failAfterError());
+});
+
+gulp.task('sass', function() {
+  gulp.src('./sass/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest(__dirname + '/public/css'));
+});
+
+gulp.task('sass:watch', function() {
+  gulp.watch('./sass/**/*.scss', ['sass']);
 });
