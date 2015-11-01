@@ -1,0 +1,22 @@
+<div> 
+  <div>
+    <input type="text" id="titlebox" ng-model='vm.title' placeholder="Title of the memo" />
+    <textarea id="docbox" ng-model='vm.doc'></textarea>
+    <textarea id="codebox"ng-model='vm.code'></textarea>
+    <button id="addmemo" ng-click='vm.addMemo()'>Add</button>
+  </div>
+
+  <div>
+    <table id="contentsTbl">
+      <tr id="{{ memo.title }}" ng-repeat="memo in vm.memos" class="item">
+        <td class="doc">
+          <h3 class="title">{{ memo.title }}</h3> 
+          <p class="description">{{ memo.doc }}</p>
+        </td>
+        <td class="code">
+          {{ memo.code }}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

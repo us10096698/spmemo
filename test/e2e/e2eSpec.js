@@ -32,25 +32,24 @@ fdescribe('Toppage of the site', function() {
   });
 
   describe('Add button', function() {
-    it('should save a memo item with given info', function() {
-      var addButton = element(by.id('addmemo'));
+    it('should add a memo item with given info', function() {
       var titleBox = element(by.id('titlebox'));
       var docBox = element(by.id('docbox'));
       var codeBox = element(by.id('codebox'));
+      var addButton = element(by.id('addmemo'));
 
-      titleBox.sendKeys('title1');
-      docBox.sendKeys('this is a document');
-      codeBox.sendKeys('var i = 0;');
+      titleBox.clear().sendKeys('title1');
+      docBox.clear().sendKeys('this is a document');
+      codeBox.clear().sendKeys('var i = 0;');
       addButton.click();
 
       expect(element.all(by.css('tr.item')).count()).toBe(1);
 
-      var memo1 = element(by.css("tr[id='title1']"));
+      var memo1 = element(by.css('tr#title1'));
 
       expect(memo1.element(by.css('.title')).getText()).toEqual('title1');
-      expect(memo1.element(by.css('.doc')).getText()).toEqual('this is a document');
+      expect(memo1.element(by.css('.description')).getText()).toEqual('this is a document');
       expect(memo1.element(by.css('.code')).getText()).toEqual('var i = 0;');
-
     });
   });
 });
