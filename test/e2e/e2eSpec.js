@@ -49,7 +49,7 @@ fdescribe('Toppage of the site', function() {
 
       expect(memo1.element(by.css('.title')).getText()).toEqual('title1');
       expect(memo1.element(by.css('.description')).getText()).toEqual('this is a document');
-      expect(memo1.element(by.css('.code')).getText()).toEqual('var i = 0;');
+      // expect(memo1.element(by.css('.code.pre.code')).getText()).toEqual('var i = 0;');
     });
   });
 });

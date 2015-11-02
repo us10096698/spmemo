@@ -3,26 +3,28 @@
 angular.module('spmemo')
     .controller('MainController', MainController);
 
-MainController.$inject = ['$http'];
+MainController.$inject = ['$http', 'marked', '$timeout'];
 
-function MainController($http) {
+function MainController($http, marked, $timeout) {
   var vm = this;
 
-  vm.doc = 'doc';
-  vm.title = 'title';
-  vm.code = 'code';
+  vm.doc = '';
+  vm.title = '';
+  vm.code = '';
   vm.memos = [];
 
   vm.addMemo = function() {
-    var item = {title: vm.title, doc: vm.doc, code: vm.code};
+    var encodedDoc = marked(vm.doc);
+
+    var item = {title: vm.title, doc: encodedDoc, code: vm.code};
     vm.memos.push(item);
+
+    $timeout(function() {
+      angular.forEach(angular.element('pre code'), function(block, index) {
+        hljs.highlightBlock(block);
+      });
+    }, 1000);
   };
 
-  vm.process = function(message) {
-    var config = {'params': {'message': message}};
-    $http.get('/api/hello', config)
-      .then(function callback(res) {
-        vm.setTagline(res.data);
-      });
-  };
 }
+

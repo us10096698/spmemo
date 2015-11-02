@@ -2,20 +2,36 @@
 <html lang="en" ng-app='spmemo'>
 <head>
   <meta charset="UTF-8">
+  <script src="components/jquery/dist/jquery.min.js"></script>
   <script src="components/angular/angular.min.js"></script>
   <script src="components/angular-route/angular-route.min.js"></script>
-  <script src="components/jquery/dist/jquery.min.js"></script>
+  <script src="components/angular-sanitize/angular-sanitize.min.js"></script>
   <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="components/marked/lib/marked.js"></script>
+  <script src="components/angular-marked/angular-marked.js"></script>
   <script src="app.js"></script>
   <script src="routes.js"></script>
   <script src="controllers/mainCtrl.js"></script>
   <link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="components/highlightjs/styles/solarized_dark.css" />
+  <link rel="stylesheet" href="css/spmemo.css" />
 
   <title>Single page memo app</title>
 
 </head>
 <body>
-  <h1> Single Page Memo App </h1>
- <div ng-view></div>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <div class="page-header">
+          <h1>Single Page Memo App <small>memo, memo, memo</small></h1>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-view></div>
+
+  <script src="components/highlightjs/highlight.pack.min.js"></script>
 </body>
 </html>

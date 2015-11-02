@@ -5,7 +5,7 @@ describe('MainController', function() {
 
   var $controller, $httpBackend;
 
-  beforeEach(inject(function(_$controller_, _$httpBackend_){
+  beforeEach(inject(function(_$controller_, _$httpBackend_) {
     $controller = _$controller_;
     $httpBackend = _$httpBackend_;
   }));
@@ -24,7 +24,7 @@ describe('MainController', function() {
     vm.code = 'code1';
     vm.addMemo();
 
-    var expectMemos = [{title: 'title1', doc: 'doc1', code: 'code1'}];
+    var expectMemos = [{title: 'title1', doc: '<p>doc1</p>\n', code: 'code1'}];
     expect(vm.memos).toEqual(expectMemos);
   });
 });

@@ -1,20 +1,31 @@
-<div> 
-  <div>
-    <input type="text" id="titlebox" ng-model='vm.title' placeholder="Title of the memo" />
-    <textarea id="docbox" ng-model='vm.doc'></textarea>
-    <textarea id="codebox"ng-model='vm.code'></textarea>
-    <button id="addmemo" ng-click='vm.addMemo()'>Add</button>
+<div class="container-fluid"> 
+  <div class="jumbotron">
+    <div class="form-group">
+      <label for="titlebox">Title</label>
+      <input type="text" id="titlebox" class="form-control" ng-model='vm.title' placeholder="Title of the memo" />
+    </div>
+    <div class="form-group">
+      <label for="docbox">Document</label>
+      <textarea id="docbox" class="form-control" ng-model='vm.doc'></textarea>
+    </div>
+    <div class="form-group">
+      <label for="codebox">Code</label>
+      <textarea id="codebox" class="form-control" ng-model='vm.code'></textarea>
+    </div>
+    <button id="addmemo" class="btn btn-primary btn-lg" ng-click='vm.addMemo()'>Add</button>
   </div>
 
   <div>
-    <table id="contentsTbl">
+    <table id="contentsTbl" class='table'>
       <tr id="{{ memo.title }}" ng-repeat="memo in vm.memos" class="item">
-        <td class="doc">
+        <td class="doc col-lg-4">
           <h3 class="title">{{ memo.title }}</h3> 
-          <p class="description">{{ memo.doc }}</p>
+          <p class="description" ng-bind-html="memo.doc"></p>
         </td>
-        <td class="code">
-          {{ memo.code }}
+        <td class="code col-lg-8">
+          <pre>
+            <code ng-bind-html="memo.code"></code>
+          </pre>
         </td>
       </tr>
     </table>
