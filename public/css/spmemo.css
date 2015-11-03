@@ -9,3 +9,6 @@ td.code {
 
 .table > tbody > tr > td {
   border-top: 0; }
+
+textarea#docbox, textarea#codebox {
+  width: 48%; }

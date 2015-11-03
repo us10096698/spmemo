@@ -23,7 +23,7 @@ function MainController($http, marked, $timeout) {
       angular.forEach(angular.element('pre code'), function(block, index) {
         hljs.highlightBlock(block);
       });
-    }, 1000);
+    }, 500);
   };
 
 }

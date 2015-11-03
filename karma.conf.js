@@ -9,7 +9,7 @@ module.exports = function(config) {
       'public/components/angular-mocks/angular-mocks.js',
       'public/components/angular-route/angular-route.min.js',
       'public/components/angular-sanitize/angular-sanitize.min.js',
-      'public/components/marked/marked.',
+      'public/components/marked/marked.min.js',
       'public/components/marked/lib/marked.js',
       'public/components/angular-marked/angular-marked.js',
       'public/*.js',
