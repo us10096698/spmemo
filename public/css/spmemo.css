@@ -11,4 +11,14 @@ td.code {
   border-top: 0; }
 
 textarea#docbox, textarea#codebox {
-  width: 48%; }
+  width: 50%; }
+
+div.navbar-brand {
+  cursor: pointer; }
+
+.notransition * {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  -ms-transition: none !important;
+  transition: none !important; }

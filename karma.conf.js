@@ -5,6 +5,7 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['jasmine'],
     files: [
+      'public/components/jquery/dist/jquery.min.js',
       'public/components/angular/angular.min.js',
       'public/components/angular-mocks/angular-mocks.js',
       'public/components/angular-route/angular-route.min.js',
@@ -12,6 +13,9 @@ module.exports = function(config) {
       'public/components/marked/marked.min.js',
       'public/components/marked/lib/marked.js',
       'public/components/angular-marked/angular-marked.js',
+      'public/components/angular-bootstrap/ui-bootstrap.min.js',
+      'public/components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+      'public/components/bootstrap/dist/js/bootstrap.min.js',
       'public/*.js',
       'public/controllers/*.js',
       'test/client/*Spec.js'

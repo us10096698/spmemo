@@ -4,36 +4,12 @@
         <div class="navbar-header">
           <div class="page-header">
             <h1>Single Page Memo App <small>memo, memo, memo</small></h1>
-            <a class="navbar-brand" id="addLink" role="button" data-toggle="modal" href="/#/#addAMemo" aria-expanded="false" aria-controls="addAMemo">Add a memo</a>
+            <div class="navbar-brand" id="addLink" ng-click="vm.openModal()">Add a memo</div>
             <a class="navbar-brand" id="importLink" href="/#/">Import</a>
-            <a class="navbar-brand" id="exportLink"  href="/#/">Export</a>
+            <div class="navbar-brand" id="exportLink" ng-click="vm.saveMemo()">Export</div>
           </div>
         </div>
     </nav>
-  </div>
-
-  <div class="modal fade" id="addAMemo" tablindex="-1" role="dialog" aria-labelledby="">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="myModalLabel">Add a Memo</h4>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <input type="text" id="titlebox" class="form-control" ng-model='vm.title' placeholder="Title" />
-          </div>
-          <div class="form-group form-inline">
-            <textarea id="docbox" class="form-control" rows="10" ng-model='vm.doc' placeholder="Document"></textarea>
-            <textarea id="codebox" class="form-control" rows="10" ng-model='vm.code' placeholder="Code"></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button id="addmemo" type="button" class="btn btn-primary" data-dismiss="modal" ng-click="vm.addMemo()">Save changes</button>
-        </div>
-      </div>
-     </div>
   </div>
 
   <div class="container-fluid">

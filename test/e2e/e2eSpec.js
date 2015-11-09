@@ -5,7 +5,7 @@ describe('Toppage of the site', function() {
 
   var addLink, importLink, exportLink;
   var contentsTbl;
-  var titleBox, docBox, codeBox, addButton;
+  var titleBox, docBox, codeBox, addButton, closeButton;
 
   beforeAll(function() {
     server.start();
@@ -17,6 +17,7 @@ describe('Toppage of the site', function() {
 
   beforeEach(function() {
     browser.get('/');
+    browser.executeScript('for (var i in window.sessionStorage) {window.sessionStorage.removeItem(i);}');
 
     contentsTbl = element(by.id('contentsTbl'));
     addLink = element(by.id('addLink'));
@@ -37,30 +38,36 @@ describe('Toppage of the site', function() {
     expect(exportLink.getText()).toEqual('Export');
   });
 
-
-  describe('"Add a memo" modal dialogue', function() {
+  describe('#Add', function() {
 
     beforeEach(function() {
+      element(by.css('body')).allowAnimations(false);
+      browser.executeScript("document.body.className += ' notransition';");
+
       addLink.click();
 
       titleBox = element(by.id('titlebox'));
       docBox = element(by.id('docbox'));
       codeBox = element(by.id('codebox'));
       addButton = element(by.id('addmemo'));
+      closeButton = element(by.id('close-modal'));
     });
 
-    it('should show when Add link is clicked', function() {
-      expect(titleBox.isPresent()).toBeTruthy();
-      expect(docBox.isPresent()).toBeTruthy();
-      expect(codeBox.isPresent()).toBeTruthy();
-      expect(addButton.isPresent()).toBeTruthy();
+    it('should show a modal dialog', function() {
+      expect(titleBox.isDisplayed()).toBe(true);
+      expect(docBox.isDisplayed()).toBe(true);
+      expect(codeBox.isDisplayed()).toBe(true);
+      expect(addButton.isDisplayed()).toBe(true);
       expect(addButton.getText()).toEqual('Save changes');
+      expect(closeButton.getText()).toEqual('Close');
     });
 
-    it('should add a memo with given info', function() {
+    it('should close a modal dialog when close button is clicked', function() {
+      closeButton.click();
+      expect(titleBox.isPresent()).toBe(false);
+    });
 
-      browser.sleep(1000);
-
+    it('should show a modal dialog and add a memo with given info', function() {
       titleBox.clear().sendKeys('title1');
       docBox.clear().sendKeys('this is a document');
       codeBox.clear().sendKeys('var i = 0;');
@@ -72,7 +79,23 @@ describe('Toppage of the site', function() {
 
       expect(memo1.element(by.css('.title')).getText()).toEqual('title1');
       expect(memo1.element(by.css('.description')).getText()).toEqual('this is a document');
-      // expect(memo1.element(by.css('.code.pre.code')).getText()).toEqual('var i = 0;');
+    });
+
+    it('should restore memos after page refresh', function() {
+      titleBox.clear().sendKeys('title2');
+      docBox.clear().sendKeys('this is a document');
+      codeBox.clear().sendKeys('var i = 0;');
+      addButton.click();
+
+      browser.get('/');
+      browser.sleep(1000);
+
+      expect(element.all(by.css('tr.item')).count()).toBe(1);
+
+      var memo2 = element(by.css('tr#title2'));
+
+      expect(memo2.element(by.css('.title')).getText()).toEqual('title2');
+      expect(memo2.element(by.css('.description')).getText()).toEqual('this is a document');
     });
   });
 });
