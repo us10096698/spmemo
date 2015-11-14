@@ -22,3 +22,11 @@ div.navbar-brand {
   -o-transition: none !important;
   -ms-transition: none !important;
   transition: none !important; }
+
+td button.btn {
+  float: right;
+  margin-right: 10px;
+  display: none; }
+
+td:hover button {
+  display: block; }

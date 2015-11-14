@@ -41,16 +41,8 @@ describe('Toppage of the site', function() {
   describe('#Add', function() {
 
     beforeEach(function() {
-      element(by.css('body')).allowAnimations(false);
-      browser.executeScript("document.body.className += ' notransition';");
-
-      addLink.click();
-
-      titleBox = element(by.id('titlebox'));
-      docBox = element(by.id('docbox'));
-      codeBox = element(by.id('codebox'));
-      addButton = element(by.id('addmemo'));
-      closeButton = element(by.id('close-modal'));
+      disableAnimation();
+      openModal();
     });
 
     it('should show a modal dialog', function() {
@@ -59,6 +51,7 @@ describe('Toppage of the site', function() {
       expect(codeBox.isDisplayed()).toBe(true);
       expect(addButton.isDisplayed()).toBe(true);
       expect(addButton.getText()).toEqual('Save changes');
+      expect(addButton.getAttribute('disabled')).toBeTruthy();
       expect(closeButton.getText()).toEqual('Close');
     });
 
@@ -68,53 +61,31 @@ describe('Toppage of the site', function() {
     });
 
     it('should show a modal dialog and add a memo with given info', function() {
-      expect(addButton.getAttribute('disabled')).toBeTruthy();
-
-      titleBox.clear().sendKeys('title1');
-      docBox.clear().sendKeys('this is a document');
-      codeBox.clear().sendKeys('var i = 0;');
-
-      expect(addButton.getAttribute('disabled')).toBeFalsy();
-
-      addButton.click();
+      addItem('title1');
 
       expect(element.all(by.css('tr.item')).count()).toBe(1);
-
       var memo1 = element(by.css('tr#title1'));
-
       expect(memo1.element(by.css('.title')).getText()).toEqual('title1');
       expect(memo1.element(by.css('.description')).getText()).toEqual('this is a document');
     });
 
     it('should add second memo without page reload', function() {
-      titleBox.clear().sendKeys('title1');
-      docBox.clear().sendKeys('this is a document');
-      codeBox.clear().sendKeys('var i = 0;');
-      addButton.click();
+      addItem('title1');
 
-      addLink.click();
-
-      titleBox.clear().sendKeys('title2');
-      docBox.clear().sendKeys('this is a document2');
-      codeBox.clear().sendKeys('var i = 1;');
-      addButton.click();
+      openModal();
+      addItem('title2');
 
       expect(element.all(by.css('tr.item')).count()).toBe(2);
     });
 
     it('should restore memos after page refresh', function() {
-      titleBox.clear().sendKeys('title2');
-      docBox.clear().sendKeys('this is a document');
-      codeBox.clear().sendKeys('var i = 0;');
-      addButton.click();
-
+      addItem('title2');
       browser.get('/');
       browser.sleep(1000);
 
       expect(element.all(by.css('tr.item')).count()).toBe(1);
 
       var memo2 = element(by.css('tr#title2'));
-
       expect(memo2.element(by.css('.title')).getText()).toEqual('title2');
       expect(memo2.element(by.css('.description')).getText()).toEqual('this is a document');
     });
@@ -126,4 +97,53 @@ describe('Toppage of the site', function() {
       expect(errors.get(2).getText()).toEqual('Code must not be empty.');
     });
   });
+
+  describe('#delete', function() {
+    var deleteBtn, memo;
+
+    beforeEach(function() {
+      disableAnimation();
+
+      openModal();
+      addItem('title2');
+
+      memo = element(by.css('tr#title2 td.code'));
+      deleteBtn = memo.element(by.css('.remove'));
+    });
+
+    it('should display a delete link to each item', function() {
+      expect(deleteBtn.isDisplayed()).toBe(false);
+      browser.actions().mouseMove(memo).perform();
+      expect(deleteBtn.isDisplayed()).toBe(true);
+    });
+
+    it('should remove a item', function() {
+      browser.actions().mouseMove(memo).perform();
+      deleteBtn.click();
+      var memos = element.all(by.css('tr'));
+      expect(memos.count()).toBe(0);
+    });
+  });
+
+  function disableAnimation() {
+    element(by.css('body')).allowAnimations(false);
+    browser.executeScript("document.body.className += ' notransition';");
+  }
+
+  function openModal() {
+    addLink.click();
+    titleBox = element(by.id('titlebox'));
+    docBox = element(by.id('docbox'));
+    codeBox = element(by.id('codebox'));
+    addButton = element(by.id('addmemo'));
+    closeButton = element(by.id('close-modal'));
+  }
+
+  function addItem(item) {
+    titleBox.clear().sendKeys(item);
+    docBox.clear().sendKeys('this is a document');
+    codeBox.clear().sendKeys('var i = 0;');
+    addButton.click();
+  }
+
 });

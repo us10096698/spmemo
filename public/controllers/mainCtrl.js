@@ -3,16 +3,16 @@
 angular.module('spmemo')
     .controller('MainController', MainController);
 
-MainController.$inject = ['$http', 'marked', '$timeout', '$document', '$uibModal'];
+MainController.$inject = ['$http', 'marked', '$timeout', '$document', '$uibModal', '$filter'];
 
-function MainController($http, marked, $timeout, $document, $uibModal) {
+function MainController($http, marked, $timeout, $document, $uibModal, $filter) {
 
   var vm = this;
 
   vm.memos = {};
   vm.getAllMemos = get;
-  vm.saveMemo = save;
   vm.openModal = openModal;
+  vm.delete = removeItem;
 
   $document.ready(function() {
     get();
@@ -36,7 +36,12 @@ function MainController($http, marked, $timeout, $document, $uibModal) {
     }, 500);
   }
 
-  function save() {
+  function removeItem(id) {
+    var obj = angular.fromJson(sessionStorage.getItem('spmemo'));
+    delete obj[id];
+    var json = $filter('json')(obj);
+    sessionStorage.setItem('spmemo', json);
+    delete  vm.memos[id];
   }
 
   function openModal() {

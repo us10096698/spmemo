@@ -33,3 +33,12 @@ div.navbar-brand {
   transition: none !important;
 }
 
+td button.btn {
+  float: right;
+  margin-right: 10px;
+  display: none;
+}
+
+td:hover button {
+  display: block;
+}
