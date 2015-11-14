@@ -15,11 +15,14 @@ td.code {
 }
 
 textarea#docbox, textarea#codebox {
-  width: 50%;
 }
 
 div.navbar-brand {
   cursor: pointer;
+}
+
+.error-msg {
+  color: red;
 }
 
 .notransition * {
@@ -29,3 +32,4 @@ div.navbar-brand {
   -ms-transition: none !important;
   transition: none !important;
 }
+

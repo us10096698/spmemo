@@ -10,11 +10,11 @@ td.code {
 .table > tbody > tr > td {
   border-top: 0; }
 
-textarea#docbox, textarea#codebox {
-  width: 50%; }
-
 div.navbar-brand {
   cursor: pointer; }
+
+.error-msg {
+  color: red; }
 
 .notransition * {
   -webkit-transition: none !important;

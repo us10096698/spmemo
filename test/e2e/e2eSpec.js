@@ -68,9 +68,14 @@ describe('Toppage of the site', function() {
     });
 
     it('should show a modal dialog and add a memo with given info', function() {
+      expect(addButton.getAttribute('disabled')).toBeTruthy();
+
       titleBox.clear().sendKeys('title1');
       docBox.clear().sendKeys('this is a document');
       codeBox.clear().sendKeys('var i = 0;');
+
+      expect(addButton.getAttribute('disabled')).toBeFalsy();
+
       addButton.click();
 
       expect(element.all(by.css('tr.item')).count()).toBe(1);
@@ -79,6 +84,22 @@ describe('Toppage of the site', function() {
 
       expect(memo1.element(by.css('.title')).getText()).toEqual('title1');
       expect(memo1.element(by.css('.description')).getText()).toEqual('this is a document');
+    });
+
+    it('should add second memo without page reload', function() {
+      titleBox.clear().sendKeys('title1');
+      docBox.clear().sendKeys('this is a document');
+      codeBox.clear().sendKeys('var i = 0;');
+      addButton.click();
+
+      addLink.click();
+
+      titleBox.clear().sendKeys('title2');
+      docBox.clear().sendKeys('this is a document2');
+      codeBox.clear().sendKeys('var i = 1;');
+      addButton.click();
+
+      expect(element.all(by.css('tr.item')).count()).toBe(2);
     });
 
     it('should restore memos after page refresh', function() {
@@ -96,6 +117,13 @@ describe('Toppage of the site', function() {
 
       expect(memo2.element(by.css('.title')).getText()).toEqual('title2');
       expect(memo2.element(by.css('.description')).getText()).toEqual('this is a document');
+    });
+
+    it('should display error message when the forms are empty', function() {
+      var errors = element.all(by.css('.error-msg'));
+      expect(errors.get(0).getText()).toEqual('Title must not be empty.');
+      expect(errors.get(1).getText()).toEqual('Doc must not be empty.');
+      expect(errors.get(2).getText()).toEqual('Code must not be empty.');
     });
   });
 });

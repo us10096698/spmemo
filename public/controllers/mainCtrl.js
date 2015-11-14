@@ -9,7 +9,7 @@ function MainController($http, marked, $timeout, $document, $uibModal) {
 
   var vm = this;
 
-  vm.memos = [];
+  vm.memos = {};
   vm.getAllMemos = get;
   vm.saveMemo = save;
   vm.openModal = openModal;
@@ -19,9 +19,11 @@ function MainController($http, marked, $timeout, $document, $uibModal) {
   });
 
   function get() {
-    for (var key in sessionStorage) {
-      var item = angular.fromJson(sessionStorage.getItem(key));
-      vm.memos.push({title: item.title, doc: marked(item.doc), code: item.code});
+    var obj = angular.fromJson(sessionStorage.getItem('spmemo'));
+
+    for (var key in obj) {
+      var item = obj[key];
+      vm.memos[key] = {title: item.title, doc: marked(item.doc), code: item.code};
     }
     update();
   }
@@ -41,10 +43,12 @@ function MainController($http, marked, $timeout, $document, $uibModal) {
     var modalInstance = $uibModal.open({
       templateUrl: '/views/templates/modal.html',
       controller: 'ModalInstanceController',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      size: 'lg'
     });
+
     modalInstance.result.then(function(item) {
-      vm.memos.push(item);
+      vm.memos[item.title] = item;
       update();
     });
   }
