@@ -3,9 +3,9 @@
 angular.module('spmemo')
     .controller('MainController', MainController);
 
-MainController.$inject = ['$http', 'marked', '$timeout', '$document', '$uibModal', '$filter'];
+MainController.$inject = ['$http', 'marked', '$timeout', '$document', '$uibModal', '$filter', 'memoService'];
 
-function MainController($http, marked, $timeout, $document, $uibModal, $filter) {
+function MainController($http, marked, $timeout, $document, $uibModal, $filter, memoService) {
 
   var vm = this;
 
@@ -13,6 +13,7 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter) 
   vm.getAllMemos = get;
   vm.openModal = openModal;
   vm.delete = removeItem;
+  vm.edit = editItem;
 
   $document.ready(function() {
     get();
@@ -42,6 +43,14 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter) 
     var json = $filter('json')(obj);
     sessionStorage.setItem('spmemo', json);
     delete  vm.memos[id];
+  }
+
+  function editItem(id) {
+    var obj = angular.fromJson(sessionStorage.getItem('spmemo'));
+    var item = obj[id];
+
+    memoService.setMemo(item);
+    openModal();
   }
 
   function openModal() {

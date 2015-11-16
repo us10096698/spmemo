@@ -18,6 +18,7 @@ module.exports = function(config) {
       'public/components/bootstrap/dist/js/bootstrap.min.js',
       'public/*.js',
       'public/controllers/*.js',
+      'public/services/*.js',
       'test/client/*Spec.js'
     ],
     exclude: [

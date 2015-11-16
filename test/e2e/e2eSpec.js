@@ -125,6 +125,45 @@ describe('Toppage of the site', function() {
     });
   });
 
+  describe('#edit', function() {
+    var editBtn, memo;
+
+    beforeEach(function() {
+      disableAnimation();
+
+      openModal();
+      addItem('title');
+
+      memo = element(by.css('tr#title td.code'));
+      editBtn = memo.element(by.css('.edit'));
+    });
+
+    it('should display a edit link to each item', function() {
+      expect(editBtn.isDisplayed()).toBe(false);
+      browser.actions().mouseMove(memo).perform();
+      expect(editBtn.isDisplayed()).toBe(true);
+    });
+
+    it('should open a modal dialog with the information of the memo', function() {
+      browser.actions().mouseMove(memo).perform();
+      editBtn.click();
+      expect(titleBox.isDisplayed()).toBe(true);
+      expect(titleBox.getAttribute('value')).toEqual('title');
+      expect(docBox.getAttribute('value')).toEqual('this is a document');
+      expect(codeBox.getAttribute('value')).toEqual('var i = 0;');
+    });
+
+    it('should edit the memo', function() {
+      browser.actions().mouseMove(memo).perform();
+      editBtn.click();
+      titleBox.clear().sendKeys('edited');
+      addButton.click();
+      // expect(element.all(by.css('tr.item')).count()).toBe(1);
+      var memo2 = element(by.css('tr#edited'));
+      expect(memo2.element(by.css('.title')).getText()).toEqual('edited');
+    });
+  });
+
   function disableAnimation() {
     element(by.css('body')).allowAnimations(false);
     browser.executeScript("document.body.className += ' notransition';");

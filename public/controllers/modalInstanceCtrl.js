@@ -3,23 +3,21 @@
 angular.module('spmemo')
   .controller('ModalInstanceController', ModalInstanceController);
 
-ModalInstanceController.$inject = ['$uibModalInstance', '$filter', 'marked'];
+ModalInstanceController.$inject = ['$uibModalInstance', '$filter', 'marked', 'memoService'];
 
-function ModalInstanceController($uibModalInstance, $filter, marked) {
+function ModalInstanceController($uibModalInstance, $filter, marked, memoService) {
   var vm = this;
 
-  vm.doc = '';
-  vm.title = '';
-  vm.code = '';
+  var item = memoService.getMemo();
+  vm.doc = item.doc;
+  vm.title = item.title;
+  vm.code = item.code;
   vm.errFlag;
 
   vm.addMemo = add;
   vm.closeModal = closeModal;
 
   function add() {
-
-    console.log('add');
-
     errorCheck();
 
     if (typeof(Storage) != 'undefined') {
