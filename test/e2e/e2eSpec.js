@@ -164,6 +164,28 @@ describe('Toppage of the site', function() {
     });
   });
 
+  describe('#export', function() {
+    it('should export current memos as a json string', function() {
+      disableAnimation();
+      openModal();
+      addItem('title');
+
+      browser.ignoreSynchronization = true;
+
+      exportLink.click();
+
+      var expected = JSON.parse('{"title": {"title": "title", "doc": "this is a document", "code": "var i = 0;"}}');
+      var content = element(by.css('pre'));
+      content.getText().then(function(text) {
+        var output = JSON.parse(text);
+        expect(output).toEqual(expected);
+      });
+
+      browser.ignoreSynchronization = false;
+
+    });
+  });
+
   function disableAnimation() {
     element(by.css('body')).allowAnimations(false);
     browser.executeScript("document.body.className += ' notransition';");

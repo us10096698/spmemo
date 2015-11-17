@@ -14,6 +14,7 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
   vm.openModal = openModal;
   vm.delete = removeItem;
   vm.edit = editItem;
+  vm.href_ex = '';
 
   $document.ready(function() {
     get();
@@ -29,7 +30,15 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
     update();
   }
 
+  function saveMemosAsJson() {
+    var blob = new Blob([sessionStorage.getItem('spmemo')], {'type': 'application/json'});
+    window.URL = window.URL || window.webkitURL;
+    vm.href_ex = window.URL.createObjectURL(blob);
+  }
+
   function update() {
+    saveMemosAsJson();
+
     $timeout(function() {
       angular.forEach(angular.element('pre code'), function(block, index) {
         hljs.highlightBlock(block);
@@ -66,4 +75,5 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
       update();
     });
   }
+
 }
