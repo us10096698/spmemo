@@ -96,7 +96,7 @@ describe('Toppage of the site', function() {
       expect(errors.get(0).getText()).toEqual('Title must not be empty.');
     });
 
-    fit('should add a memo without doc and code', function() {
+    it('should add a memo without doc and code', function() {
       titleBox.clear().sendKeys('title');
       addButton.click();
 
@@ -193,6 +193,25 @@ describe('Toppage of the site', function() {
 
     });
   });
+
+  // We cannot set value to the input['type'='file']. So how do I write an e2e testcase for this situation?
+  // describe('#import', function() {
+    // var path = require('path');
+
+    // it('should import a memo file to the site', function() {
+      // var fileToUpload = '../test.json';
+      // var absolutePath = path.resolve(__dirname, fileToUpload);
+      // var scriptStr = '$("#lefile").val("' + absolutePath + '")';
+ 
+      // browser.executeScript(scriptStr);
+ 
+      // expect($$('tr.item').count()).toBe(1);
+ 
+      // var memo = $('tr#title1');
+      // expect(memo.$('.title').getText()).toEqual('title1');
+      // expect(memo.$('.description').getText()).toEqual('this is a document');
+    // });
+  // });
 
   function disableAnimation() {
     element(by.css('body')).allowAnimations(false);
