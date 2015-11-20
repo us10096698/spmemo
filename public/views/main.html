@@ -1,19 +1,14 @@
 <div>
   <div class="container-fluid">
     <nav class="navbar navbar-default">
-        <div class="navbar-header">
-          <div class="page-header">
-            <h1>Single Page Memo App <small>memo, memo, memo</small></h1>
-            <div class="navbar-brand" id="addLink" ng-click="vm.openModal()">Add a memo</div>
-
-            <input id="lefile" type="file" style="display:none">
-            <div class="input-append">
-              <a id="importLink" class="navbar-brand" ng-click="vm.importMemo()">Import</a>
-            </div>
-
-            <a class="navbar-brand" id="exportLink" href="{{ vm.href_ex }}">Export</a>
-          </div>
-        </div>
+      <div class="navbar-brand" id="addLink" ng-click="vm.openModal()">Add a memo</div>
+    
+      <input id="lefile" type="file" style="display:none">
+      <div class="input-append">
+        <a id="importLink" class="navbar-brand" ng-click="vm.importMemo()">Import</a>
+      </div>
+    
+      <a class="navbar-brand" id="exportLink" href="{{ vm.href_ex }}">Export</a>
     </nav>
   </div>
 
