@@ -213,6 +213,21 @@ describe('Toppage of the site', function() {
     // });
   // });
 
+  describe('#copy', function() {
+    it('should show a toast when succeed', function() {
+      disableAnimation();
+      openModal();
+      addItem('title');
+
+      var memo = $('tr#title td.code');
+      var copyBtn = memo.$('.copy');
+      browser.actions().mouseMove(memo).perform();
+      copyBtn.click();
+
+      expect($('.toast-success').isPresent()).toBe(true);
+    });
+  });
+
   function disableAnimation() {
     element(by.css('body')).allowAnimations(false);
     browser.executeScript("document.body.className += ' notransition';");

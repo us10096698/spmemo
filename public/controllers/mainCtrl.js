@@ -4,9 +4,9 @@ angular.module('spmemo')
     .controller('MainController', MainController);
 
 MainController.$inject = ['$http', 'marked', '$timeout', '$document',
-  '$uibModal', '$filter', 'memoService', '$scope'];
+  '$uibModal', '$filter', 'memoService', '$scope', 'toastr'];
 
-function MainController($http, marked, $timeout, $document, $uibModal, $filter, memoService, $scope) {
+function MainController($http, marked, $timeout, $document, $uibModal, $filter, memoService, $scope, toastr) {
 
   var vm = this;
 
@@ -17,6 +17,8 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
   vm.delete = removeItem;
   vm.edit = editItem;
   vm.href_ex = '';
+  vm.copySucceed = copySucceed;
+  vm.copyFailed = copyFailed;
 
   var blocker = angular.element('#contentsTbl')[0];
   var observer = new MutationObserver(function(mutations) {
@@ -56,13 +58,13 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
       return function(e) {
         $scope.$apply(function() {
           sessionStorage.setItem('spmemo', e.target.result);
-          get(); 
+          get();
         });
       };
     })(file);
 
     reader.readAsText(file);
-    angular.element('input[id=lefile]').val("");
+    angular.element('input[id=lefile]').val('');
   }
 
   function get() {
@@ -107,6 +109,14 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
 
     memoService.setMemo(item);
     openModal();
+  }
+
+  function copySucceed() {
+    toastr.success('Copied!');
+  }
+
+  function copyFailed(err) {
+    toastr.error('Copy failed', err);
   }
 
   function openModal() {
