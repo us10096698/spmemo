@@ -9,9 +9,9 @@ function ModalInstanceController($uibModalInstance, $filter, marked, memoService
   var vm = this;
 
   var item = memoService.getMemo();
-  vm.doc = item.doc;
   vm.title = item.title;
-  vm.code = item.code;
+  vm.doc = item.doc || '';
+  vm.code = item.code || '';
   vm.errFlag;
 
   vm.addMemo = add;
@@ -46,7 +46,7 @@ function ModalInstanceController($uibModalInstance, $filter, marked, memoService
   function errorCheck() {
     vm.errFlag = false;
 
-    if (!vm.title || !vm.code || !vm.doc) {
+    if (!vm.title) {
       vm.errFlag = true;
     }
   }

@@ -90,12 +90,20 @@ describe('Toppage of the site', function() {
       expect(memo2.element(by.css('.description')).getText()).toEqual('this is a document');
     });
 
-    it('should display error message when the forms are empty', function() {
-      var errors = element.all(by.css('.error-msg'));
+    it('should display an error message when the title is empty', function() {
+      var errors = $$('.error-msg');
+      expect(errors.count()).toEqual(1);
       expect(errors.get(0).getText()).toEqual('Title must not be empty.');
-      expect(errors.get(1).getText()).toEqual('Doc must not be empty.');
-      expect(errors.get(2).getText()).toEqual('Code must not be empty.');
     });
+
+    fit('should add a memo without doc and code', function() {
+      titleBox.clear().sendKeys('title');
+      addButton.click();
+
+      var memo = $('tr#title');
+      expect($$('tr.item').count()).toBe(1);
+      expect(memo.$('.title').getText()).toEqual('title');
+    })
   });
 
   describe('#delete', function() {
