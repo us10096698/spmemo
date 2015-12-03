@@ -20,8 +20,12 @@
     "angular-marked": "~1.0.0",
     "highlightjs": "~8.9.1",
     "angular-clipboard": "~1.1.1",
+<<<<<<< HEAD
     "angular-toastr": "~1.6.0",
     "angular-animate": "~1.4.8"
+=======
+    "angular-ui-sortable": "~0.13.4"
+>>>>>>> f1bd8bb... WIP: adding sort feature
   },
   "devDependencies": {
     "angular-mocks": "~1.4.7"

@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('spmemo', ['ngRoute', 'ngSanitize', 'hc.marked', 'ui.bootstrap', 'angular-clipboard', 'ngAnimate', 'toastr'])
+angular.module('spmemo', ['ngRoute', 'ngSanitize', 'hc.marked',
+    'ui.bootstrap', 'angular-clipboard', 'ngAnimate', 'toastr', 'ui.sortable'])
   .config(config);
 
 function config($compileProvider, markedProvider) {

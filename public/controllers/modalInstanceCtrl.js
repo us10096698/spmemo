@@ -24,11 +24,19 @@ function ModalInstanceController($uibModalInstance, $filter, marked, memoService
       var obj = angular.fromJson(sessionStorage.getItem('spmemo'));
 
       if (obj == null) {
-        obj = {};
+        obj = [];
       }
 
       if (!vm.errFlag) {
-        obj[vm.title] = {title: vm.title, doc: vm.doc, code: vm.code};
+        var index = memoService.getIndex();
+        var item = {title: vm.title, doc: vm.doc, code: vm.code};
+        
+        if(index != (-1)){
+          obj[index] = item; 
+        } else {
+          obj.push(item);
+        }
+
         var json = $filter('json')(obj);
         sessionStorage.setItem('spmemo', json);
 

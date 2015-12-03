@@ -42,3 +42,7 @@ td button.btn {
 td:hover button {
   display: block;
 }
+
+table#contentsTbl tr {
+  cursor: move;
+}

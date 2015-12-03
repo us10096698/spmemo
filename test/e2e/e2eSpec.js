@@ -17,7 +17,9 @@ describe('Toppage of the site', function() {
 
   beforeEach(function() {
     browser.get('/');
-    browser.executeScript('for (var i in window.sessionStorage) {window.sessionStorage.removeItem(i);}');
+    browser.executeScript('window.sessionStorage.removeItem("spmemo");');
+    browser.get('/');
+    disableAnimation();
 
     contentsTbl = element(by.id('contentsTbl'));
     addLink = element(by.id('addLink'));
@@ -39,9 +41,7 @@ describe('Toppage of the site', function() {
   });
 
   describe('#Add', function() {
-
     beforeEach(function() {
-      disableAnimation();
       openModal();
     });
 
@@ -64,7 +64,7 @@ describe('Toppage of the site', function() {
       addItem('title1');
 
       expect(element.all(by.css('tr.item')).count()).toBe(1);
-      var memo1 = element(by.css('tr#title1'));
+      var memo1 = element(by.css('tr#item0'));
       expect(memo1.element(by.css('.title')).getText()).toEqual('title1');
       expect(memo1.element(by.css('.description')).getText()).toEqual('this is a document');
     });
@@ -85,7 +85,7 @@ describe('Toppage of the site', function() {
 
       expect(element.all(by.css('tr.item')).count()).toBe(1);
 
-      var memo2 = element(by.css('tr#title2'));
+      var memo2 = element(by.css('tr#item0'));
       expect(memo2.element(by.css('.title')).getText()).toEqual('title2');
       expect(memo2.element(by.css('.description')).getText()).toEqual('this is a document');
     });
@@ -100,7 +100,7 @@ describe('Toppage of the site', function() {
       titleBox.clear().sendKeys('title');
       addButton.click();
 
-      var memo = $('tr#title');
+      var memo = $('tr#item0');
       expect($$('tr.item').count()).toBe(1);
       expect(memo.$('.title').getText()).toEqual('title');
     })
@@ -110,12 +110,10 @@ describe('Toppage of the site', function() {
     var deleteBtn, memo;
 
     beforeEach(function() {
-      disableAnimation();
-
       openModal();
       addItem('title2');
 
-      memo = element(by.css('tr#title2 td.code'));
+      memo = element(by.css('tr#item0 td.code'));
       deleteBtn = memo.element(by.css('.remove'));
     });
 
@@ -125,7 +123,7 @@ describe('Toppage of the site', function() {
       expect(deleteBtn.isDisplayed()).toBe(true);
     });
 
-    it('should remove a item', function() {
+    it('should remove an item', function() {
       browser.actions().mouseMove(memo).perform();
       deleteBtn.click();
       var memos = element.all(by.css('tr'));
@@ -137,12 +135,11 @@ describe('Toppage of the site', function() {
     var editBtn, memo;
 
     beforeEach(function() {
-      disableAnimation();
 
       openModal();
       addItem('title');
 
-      memo = element(by.css('tr#title td.code'));
+      memo = element(by.css('tr#item0 td.code'));
       editBtn = memo.element(by.css('.edit'));
     });
 
@@ -166,15 +163,14 @@ describe('Toppage of the site', function() {
       editBtn.click();
       titleBox.clear().sendKeys('edited');
       addButton.click();
-      // expect(element.all(by.css('tr.item')).count()).toBe(1);
-      var memo2 = element(by.css('tr#edited'));
+      expect(element.all(by.css('tr.item')).count()).toBe(1);
+      var memo2 = element(by.css('tr#item0'));
       expect(memo2.element(by.css('.title')).getText()).toEqual('edited');
     });
   });
 
   describe('#export', function() {
     it('should export current memos as a json string', function() {
-      disableAnimation();
       openModal();
       addItem('title');
 
@@ -182,7 +178,7 @@ describe('Toppage of the site', function() {
 
       exportLink.click();
 
-      var expected = JSON.parse('{"title": {"title": "title", "doc": "this is a document", "code": "var i = 0;"}}');
+      var expected = JSON.parse('[{"title": "title", "doc": "this is a document", "code": "var i = 0;"}]');
       var content = element(by.css('pre'));
       content.getText().then(function(text) {
         var output = JSON.parse(text);
@@ -215,17 +211,40 @@ describe('Toppage of the site', function() {
 
   describe('#copy', function() {
     it('should show a toast when succeed', function() {
-      disableAnimation();
       openModal();
       addItem('title');
 
-      var memo = $('tr#title td.code');
+      var memo = $('tr#item0 td.code');
       var copyBtn = memo.$('.copy');
       browser.actions().mouseMove(memo).perform();
       copyBtn.click();
 
       expect($('.toast-success').isPresent()).toBe(true);
     });
+  });
+
+  describe('#sort', function() {
+    it('should change order of the memos', function() {
+      openModal();
+      addItem('title');
+
+      openModal();
+      addItem('title2');
+
+      var memo = $('tr#item0');
+      var memo2 = $('tr#item1');
+
+      browser.actions().
+        mouseMove(memo).
+        mouseDown().
+        mouseMove(memo2).
+        mouseUp().
+        perform();
+
+      var index0 = $('tr#item0');
+      expect(index0.$('.title').getText()).toBe('title2');
+    });
+
   });
 
   function disableAnimation() {
@@ -248,5 +267,4 @@ describe('Toppage of the site', function() {
     codeBox.clear().sendKeys('var i = 0;');
     addButton.click();
   }
-
 });

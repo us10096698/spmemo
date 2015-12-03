@@ -10,7 +10,7 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
 
   var vm = this;
 
-  vm.memos = {};
+  vm.memos = [];
   vm.getAllMemos = get;
   vm.importMemo = importMemo;
   vm.openModal = openModal;
@@ -19,27 +19,15 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
   vm.href_ex = '';
   vm.copySucceed = copySucceed;
   vm.copyFailed = copyFailed;
+  vm.sortableOptions = { start: sortStart, stop: sortStop };
 
   var blocker = angular.element('#contentsTbl')[0];
   var observer = new MutationObserver(function(mutations) {
     render();
-    // mutations.forEach(function(mutation) {
-      // console.log(mutation.type);
-      //  if (mutation.type == 'childList') {
-      // }
-    // });
   });
   var observerOpt = {characterData: true, childList:true, subtree: true};
 
   observer.observe(blocker, observerOpt);
-
-  // $scope.$watch(
-    // function(){return vm.memos}, 
-    // function(newVal, oldVal) {
-      // console.log('changed');
-      // render();
-    // }
-  // );
 
   $document.ready(function() {
     angular.element('#lefile')[0].addEventListener('change', handleFileSelect, false);
@@ -68,15 +56,35 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
   }
 
   function get() {
-    vm.memos = {};
-    var obj = angular.fromJson(sessionStorage.getItem('spmemo'));
+    vm.memos = [];
+    var obj = angular.fromJson(sessionStorage.getItem('spmemo')) || [];
 
-    for (var key in obj) {
-      var item = obj[key];
-      vm.memos[key] = {title: item.title, doc: marked(item.doc), code: item.code};
-    }
+    obj.forEach( function(item, index, object) {
+      vm.memos[index] = {title: item.title, doc: marked(item.doc), code: item.code};
+    });
 
     saveMemosAsJson();
+  }
+
+  var beforeIdx;
+
+  function sortStart(evt, ui) {
+    beforeIdx = ui.item.index();
+  }
+
+  function sortStop(evt, ui) {
+    var afterIdx = ui.item.index();
+
+    if(beforeIdx != afterIdx){ 
+      var sessionObj = angular.fromJson(sessionStorage.getItem('spmemo'));
+      var itemToMove = sessionObj[beforeIdx];
+      sessionObj.splice(beforeIdx, 1);
+      sessionObj.splice(afterIdx, 0, itemToMove);
+  
+      var json = $filter('json')(sessionObj);
+      sessionStorage.setItem('spmemo', json);   
+      saveMemosAsJson();
+    }
   }
 
   function saveMemosAsJson() {
@@ -95,19 +103,21 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
     observer.observe(blocker, observerOpt);
   }
 
-  function removeItem(id) {
+  function removeItem(index) {
     var obj = angular.fromJson(sessionStorage.getItem('spmemo'));
-    delete obj[id];
+    obj.splice(index, 1);
+    vm.memos.splice(index, 1);
+
     var json = $filter('json')(obj);
     sessionStorage.setItem('spmemo', json);
-    delete  vm.memos[id];
+    saveMemosAsJson();
   }
 
-  function editItem(id) {
+  function editItem(index) {
     var obj = angular.fromJson(sessionStorage.getItem('spmemo'));
-    var item = obj[id];
+    var item = obj[index];
 
-    memoService.setMemo(item);
+    memoService.setMemo(item, index);
     openModal();
   }
 
@@ -128,7 +138,14 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
     });
 
     modalInstance.result.then(function(item) {
-      vm.memos[item.title] = item;
+      var index = memoService.getIndex();
+
+      if(index != (-1)){
+        vm.memos[index] = item; 
+      } else {
+        vm.memos.push(item);
+      }
+
       saveMemosAsJson();
     });
   }
