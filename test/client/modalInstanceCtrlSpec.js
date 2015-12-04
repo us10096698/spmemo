@@ -1,11 +1,11 @@
 'use strict';
 
-describe('MocalInstanceController', function() {
+describe('ModalInstanceController', function() {
   beforeEach(module('spmemo'));
 
   var $controller;
 
-  beforeEach(inject(function(_$controller_) {
+  beforeEach( inject( function(_$controller_) {
     $controller = _$controller_;
   }));
 
@@ -25,7 +25,7 @@ describe('MocalInstanceController', function() {
     vm.code = 'code1';
     vm.addMemo();
 
-    var expectMemos = {title: 'title1', doc: '<p>doc1</p>\n', code: 'code1'};
+    var expectMemos = {title: 'title1', doc: 'doc1', code: 'code1'};
 
     expect($uibModalInstance.close).toHaveBeenCalledWith(expectMemos);
   });
