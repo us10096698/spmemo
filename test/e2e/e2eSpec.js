@@ -1,10 +1,9 @@
 'use strict';
 var server = require('../../server');
 
-describe('Toppage of the site', function() {
+describe('Site', function() {
 
   var addLink, importLink, exportLink;
-  var contentsTbl;
   var titleBox, docBox, codeBox, addButton, closeButton;
 
   beforeAll(function() {
@@ -21,26 +20,34 @@ describe('Toppage of the site', function() {
     browser.get('/');
     disableAnimation();
 
-    contentsTbl = element(by.id('contentsTbl'));
-    addLink = element(by.id('addLink'));
-    importLink = element(by.id('importLink'));
-    exportLink = element(by.id('exportLink'));
+    addLink = $('#addLink');
+    importLink = $('#importLink');
+    exportLink = $('#exportLink');
   });
 
-  it('should have contents table', function() {
-    expect(contentsTbl.isPresent()).toBeTruthy();
-    expect(element.all(by.css('tr.item')).count()).toBe(0);
-  });
+  describe('#Appearance', function() {
+    var contentsTbl;
+    
+    beforeEach(function() {
+      contentsTbl = $('#contentsTbl');
+    });
 
-  it('should display header contents', function() {
-    expect(addLink.isPresent()).toBeTruthy();
-    expect(importLink.isPresent()).toBeTruthy();
-    expect(importLink.getText()).toEqual('Import');
-    expect(exportLink.isPresent()).toBeTruthy();
-    expect(exportLink.getText()).toEqual('Export');
+    it('should have contents table', function() {
+      expect(contentsTbl.isPresent()).toBe(true);
+      expect($$('tr.item').count()).toBe(0);
+    });
+  
+    it('should display header contents', function() {
+      expect(addLink.isPresent()).toBe(true);
+      expect(importLink.isPresent()).toBe(true);
+      expect(importLink.getText()).toBe('Import');
+      expect(exportLink.isPresent()).toBe(true);
+      expect(exportLink.getText()).toBe('Export');
+    });
   });
 
   describe('#Add', function() {
+
     beforeEach(function() {
       openModal();
     });
@@ -50,12 +57,12 @@ describe('Toppage of the site', function() {
       expect(docBox.isDisplayed()).toBe(true);
       expect(codeBox.isDisplayed()).toBe(true);
       expect(addButton.isDisplayed()).toBe(true);
-      expect(addButton.getText()).toEqual('Save changes');
-      expect(addButton.getAttribute('disabled')).toBeTruthy();
-      expect(closeButton.getText()).toEqual('Close');
+      expect(addButton.getText()).toBe('Save changes');
+      expect(addButton.getAttribute('disabled')).toBe('true');
+      expect(closeButton.getText()).toBe('Close');
     });
 
-    it('should close a modal dialog when close button is clicked', function() {
+    it('should close a modal dialog when the close button is clicked', function() {
       closeButton.click();
       expect(titleBox.isPresent()).toBe(false);
     });
@@ -63,37 +70,36 @@ describe('Toppage of the site', function() {
     it('should show a modal dialog and add a memo with given info', function() {
       addItem('title1');
 
-      expect(element.all(by.css('tr.item')).count()).toBe(1);
-      var memo1 = element(by.css('tr#item0'));
-      expect(memo1.element(by.css('.title')).getText()).toEqual('title1');
-      expect(memo1.element(by.css('.description')).getText()).toEqual('this is a document');
+      expect($$('tr.item').count()).toBe(1);
+
+      var memo1 = $('tr#item0');
+      expect(memo1.$('.title').getText()).toBe('title1');
+      expect(memo1.$('.description').getText()).toBe('this is a document');
     });
 
     it('should add second memo without page reload', function() {
       addItem('title1');
-
       openModal();
       addItem('title2');
 
-      expect(element.all(by.css('tr.item')).count()).toBe(2);
+      expect($$('tr.item').count()).toBe(2);
     });
 
     it('should restore memos after page refresh', function() {
       addItem('title2');
       browser.get('/');
-      browser.sleep(1000);
 
-      expect(element.all(by.css('tr.item')).count()).toBe(1);
+      expect($$('tr.item').count()).toBe(1);
 
-      var memo2 = element(by.css('tr#item0'));
-      expect(memo2.element(by.css('.title')).getText()).toEqual('title2');
-      expect(memo2.element(by.css('.description')).getText()).toEqual('this is a document');
+      var memo2 = $('tr#item0');
+      expect(memo2.$('.title').getText()).toBe('title2');
+      expect(memo2.$('.description').getText()).toBe('this is a document');
     });
 
     it('should display an error message when the title is empty', function() {
       var errors = $$('.error-msg');
-      expect(errors.count()).toEqual(1);
-      expect(errors.get(0).getText()).toEqual('Title must not be empty.');
+      expect(errors.count()).toBe(1);
+      expect(errors.get(0).getText()).toBe('Title must not be empty.');
     });
 
     it('should add a memo without doc and code', function() {
@@ -102,70 +108,70 @@ describe('Toppage of the site', function() {
 
       var memo = $('tr#item0');
       expect($$('tr.item').count()).toBe(1);
-      expect(memo.$('.title').getText()).toEqual('title');
+      expect(memo.$('.title').getText()).toBe('title');
     })
   });
 
   describe('#delete', function() {
-    var deleteBtn, memo;
+    var deleteBtn, code;
 
     beforeEach(function() {
       openModal();
       addItem('title2');
 
-      memo = element(by.css('tr#item0 td.code'));
-      deleteBtn = memo.element(by.css('.remove'));
+      code = $('tr#item0 td.code');
+      deleteBtn = code.$('.remove');
     });
 
     it('should display a delete link to each item', function() {
       expect(deleteBtn.isDisplayed()).toBe(false);
-      browser.actions().mouseMove(memo).perform();
+      browser.actions().mouseMove(code).perform();
       expect(deleteBtn.isDisplayed()).toBe(true);
     });
 
     it('should remove an item', function() {
-      browser.actions().mouseMove(memo).perform();
+      browser.actions().mouseMove(code).perform();
       deleteBtn.click();
-      var memos = element.all(by.css('tr'));
+      var memos = $$('tr');
       expect(memos.count()).toBe(0);
     });
   });
 
   describe('#edit', function() {
-    var editBtn, memo;
+    var editBtn, code;
 
     beforeEach(function() {
 
       openModal();
       addItem('title');
 
-      memo = element(by.css('tr#item0 td.code'));
-      editBtn = memo.element(by.css('.edit'));
+      code = $('tr#item0 td.code');
+      editBtn = code.$('.edit');
     });
 
-    it('should display a edit link to each item', function() {
+    it('should display an edit link to each item', function() {
       expect(editBtn.isDisplayed()).toBe(false);
-      browser.actions().mouseMove(memo).perform();
+      browser.actions().mouseMove(code).perform();
       expect(editBtn.isDisplayed()).toBe(true);
     });
 
     it('should open a modal dialog with the information of the memo', function() {
-      browser.actions().mouseMove(memo).perform();
+      browser.actions().mouseMove(code).perform();
       editBtn.click();
       expect(titleBox.isDisplayed()).toBe(true);
-      expect(titleBox.getAttribute('value')).toEqual('title');
-      expect(docBox.getAttribute('value')).toEqual('this is a document');
-      expect(codeBox.getAttribute('value')).toEqual('var i = 0;');
+      expect(titleBox.getAttribute('value')).toBe('title');
+      expect(docBox.getAttribute('value')).toBe('this is a document');
+      expect(codeBox.getAttribute('value')).toBe('var i = 0;');
     });
 
     it('should edit the memo', function() {
-      browser.actions().mouseMove(memo).perform();
+      browser.actions().mouseMove(code).perform();
       editBtn.click();
       titleBox.clear().sendKeys('edited');
       addButton.click();
-      expect(element.all(by.css('tr.item')).count()).toBe(1);
-      var memo2 = element(by.css('tr#item0'));
-      expect(memo2.element(by.css('.title')).getText()).toEqual('edited');
+      expect($$('tr.item').count()).toBe(1);
+      var memo = $('tr#item0');
+      expect(memo.$('.title').getText()).toBe('edited');
     });
   });
 
@@ -179,7 +185,7 @@ describe('Toppage of the site', function() {
       exportLink.click();
 
       var expected = JSON.parse('[{"title": "title", "doc": "this is a document", "code": "var i = 0;"}]');
-      var content = element(by.css('pre'));
+      var content = $('pre');
       content.getText().then(function(text) {
         var output = JSON.parse(text);
         expect(output).toEqual(expected);
@@ -189,25 +195,6 @@ describe('Toppage of the site', function() {
 
     });
   });
-
-  // We cannot set value to the input['type'='file']. So how do I write an e2e testcase for this situation?
-  // describe('#import', function() {
-    // var path = require('path');
-
-    // it('should import a memo file to the site', function() {
-      // var fileToUpload = '../test.json';
-      // var absolutePath = path.resolve(__dirname, fileToUpload);
-      // var scriptStr = '$("#lefile").val("' + absolutePath + '")';
- 
-      // browser.executeScript(scriptStr);
- 
-      // expect($$('tr.item').count()).toBe(1);
- 
-      // var memo = $('tr#title1');
-      // expect(memo.$('.title').getText()).toEqual('title1');
-      // expect(memo.$('.description').getText()).toEqual('this is a document');
-    // });
-  // });
 
   describe('#copy', function() {
     it('should show a toast when succeed', function() {
@@ -254,11 +241,11 @@ describe('Toppage of the site', function() {
 
   function openModal() {
     addLink.click();
-    titleBox = element(by.id('titlebox'));
-    docBox = element(by.id('docbox'));
-    codeBox = element(by.id('codebox'));
-    addButton = element(by.id('addmemo'));
-    closeButton = element(by.id('close-modal'));
+    titleBox = $('#titlebox');
+    docBox = $('#docbox');
+    codeBox = $('#codebox');
+    addButton = $('#addmemo');
+    closeButton = $('#close-modal');
   }
 
   function addItem(item) {
