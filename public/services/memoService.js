@@ -11,6 +11,7 @@ function memoService() {
   memoService.setMemo = setMemo;
   memoService.getMemo = getMemo;
   memoService.getIndex = getIndex;
+  memoService.setIndex = setIndex;
 
   return memoService;
 
@@ -23,11 +24,15 @@ function memoService() {
     return idx;
   }
 
+  function setIndex(index) {
+    idx = index;
+  }
+
   function getMemo() {
 
     var item;
 
-    if (memo === {}) {
+    if (memo == {}) {
       item = {title: '', doc: '', code: ''};
     } else {
       item = memo;

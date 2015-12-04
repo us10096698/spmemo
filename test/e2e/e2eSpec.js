@@ -173,6 +173,21 @@ describe('Site', function() {
       var memo = $('tr#item0');
       expect(memo.$('.title').getText()).toBe('edited');
     });
+
+    it('should add a memo right after edit another memo', function() {
+      openModal();
+      addItem('item2');
+
+      browser.actions().mouseMove(code).perform();
+      editBtn.click();
+      titleBox.clear().sendKeys('edited');
+      addButton.click();
+
+      openModal();
+      addItem('item3');
+
+      expect($$('tr.item').count()).toBe(3);
+    });
   });
 
   describe('#export', function() {

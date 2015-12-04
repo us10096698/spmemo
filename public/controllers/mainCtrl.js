@@ -146,6 +146,7 @@ function MainController($http, marked, $timeout, $document, $uibModal, $filter, 
         vm.memos.push(item);
       }
 
+      memoService.setIndex(-1);
       saveMemosAsJson();
     });
   }
