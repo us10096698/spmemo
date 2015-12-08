@@ -15,7 +15,7 @@ describe('ModalInstanceController', function() {
       'close': jasmine.createSpy().and.callThrough()
     };
 
-    var vm = $controller('ModalInstanceController', {
+    var vm = $controller('MemoModalInstanceController', {
       '$scope' : $scope,
       '$uibModalInstance': $uibModalInstance
     });

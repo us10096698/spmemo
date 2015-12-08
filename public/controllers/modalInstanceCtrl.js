@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('spmemo')
-  .controller('ModalInstanceController', ModalInstanceController);
+  .controller('MemoModalInstanceController', MemoModalInstanceController);
 
-ModalInstanceController.$inject = ['$uibModalInstance', 'memoService'];
+MemoModalInstanceController.$inject = ['$uibModalInstance', 'memoService'];
 
-function ModalInstanceController($uibModalInstance, memoService) {
+function MemoModalInstanceController($uibModalInstance, memoService) {
   var vm = this;
   var item = memoService.get();
 

@@ -249,6 +249,52 @@ describe('Site', function() {
 
   });
 
+  describe('#Github', function() {
+    var githubLink = $('#github');
+    var user = $('#user-name');
+    var repo = $('#repo-name');
+    var saveButton = $('#save');
+    var cancelButton = $('#cancel');
+    var errors = $$('.error-msg')
+
+    it('should show a header-link and modal dialog', function() {
+      expect(githubLink.getText()).toBe('Github');
+      githubLink.click();
+
+      expect(user.isPresent()).toBe(true);
+      expect(user.getAttribute('placeholder')).toBe('User name');
+      expect(repo.isPresent()).toBe(true);
+      expect(repo.getAttribute('placeholder')).toBe('Repository name');
+      expect(saveButton.isPresent()).toBe(true);
+      expect(saveButton.getText()).toBe('Save changes');
+      expect(saveButton.getAttribute('disabled')).toBe('true');
+      expect(cancelButton.isPresent()).toBe(true);
+      expect(cancelButton.getText()).toBe('Close');
+
+      expect(errors.count()).toBe(2);
+      expect(errors.get(0).getText()).toBe('User name must not be empty.');
+      expect(errors.get(1).getText()).toBe('Repository name must not be empty.');
+    });
+
+    it('should show the filelist of the linked Github Project', function(){
+      githubLink.click();
+      user.clear().sendKeys('us10096698');
+      expect(saveButton.getAttribute('disabled')).toBe('true');
+      repo.clear().sendKeys('spmemo-test');
+      saveButton.click();
+
+      expect($('#path').getText()).toBe('us10096698/spmemo-test');
+      var files = $$('.file');
+
+      expect(files.count()).toBe(3);
+      expect(files.get(0).getText()).toBe('file1.json');
+      expect(files.get(1).getText()).toBe('file2.json');
+      expect(files.get(2).getText()).toBe('file3.json');
+
+      expect(files.get(0).getAttribute('href')).toBe('https://raw.githubusercontent.com/us10096698/spmemo-test/master/data/file1.json');
+    });
+  });
+
   function disableAnimation() {
     element(by.css('body')).allowAnimations(false);
     browser.executeScript("document.body.className += ' notransition';");

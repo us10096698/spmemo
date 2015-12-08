@@ -1,0 +1,18 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="vm.closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <h4 class="modal-title" id="myModalLabel">Connect to Github</h4>
+</div>
+
+<div class="modal-body">
+  <div class="form-group">
+    <span ng-if="!vm.userName" class="error-msg"> User name must not be empty. </span>
+    <input type="text" id="user-name" class="form-control" ng-model='vm.userName' placeholder="User name" />
+    <span ng-if="!vm.repoName" class="error-msg"> Repository name must not be empty. </span>
+    <input type="text" id="repo-name" class="form-control" ng-model='vm.repoName' placeholder="Repository name" />
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button id="cancel" type="button" class="btn btn-default" ng-click="vm.closeModal()"> Close</button>
+  <button id="save" type="button" class="btn btn-primary" ng-click="vm.save()" ng-disabled="!vm.userName || !vm.repoName">Save changes</button>
+</div>

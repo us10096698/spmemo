@@ -3,9 +3,9 @@
 angular.module('spmemo')
     .controller('MainController', MainController);
 
-MainController.$inject = ['$http', '$document', '$uibModal', 'memoService', '$scope', 'toastr'];
+MainController.$inject = ['$http', '$document', '$uibModal', 'memoService', '$scope', 'toastr', 'githubService'];
 
-function MainController($http, $document, $uibModal, memoService, $scope, toastr) {
+function MainController($http, $document, $uibModal, memoService, $scope, toastr, githubService) {
 
   var vm = this;
   vm.memos = [];
@@ -20,7 +20,11 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
   vm.removeMemo = removeMemo;
   vm.editMemo = editMemo;
 
-  vm.openModal = openModal;
+  vm.path;
+  vm.files;
+
+  vm.openAddModal = openAddModal;
+  vm.openGithubModal = openGithubModal;
   vm.copySucceed = copySucceed;
   vm.copyFailed = copyFailed;
 
@@ -70,13 +74,13 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
   function editMemo(index) {
     var item = memoService.get(index);
     memoService.set(item, index);
-    openModal();
+    openAddModal();
   }
 
-  function openModal() {
+  function openAddModal() {
     var modalInstance = $uibModal.open({
-      templateUrl: '/views/templates/modal.html',
-      controller: 'ModalInstanceController',
+      templateUrl: '/views/templates/modal-memo.html',
+      controller: 'MemoModalInstanceController',
       controllerAs: 'vm',
       size: 'lg'
     });
@@ -84,6 +88,21 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
     modalInstance.result.then(function(item) {
       memoService.update(item, vm.memos);
       updateExportUrl();
+    });
+  }
+
+  function openGithubModal() {
+    var modalInstance = $uibModal.open({
+      templateUrl: '/views/templates/modal-github.html',
+      controller: 'GithubModalInstanceController',
+      controllerAs: 'vm',
+      size: 'md'
+    });
+
+    modalInstance.result.then(function(info) {
+      vm.files = githubService.updateFileList(info);
+      vm.path = githubService.getPath();
+      // updateExportUrl();
     });
   }
 

@@ -33,3 +33,15 @@ td:hover button {
 
 table#contentsTbl tr {
   cursor: move; }
+
+#main {
+  overflow: hidden; }
+
+.sidebar {
+  background-color: #696969;
+  padding-bottom: 10000px;
+  margin-bottom: -10000px;
+  margin-right: 20px; }
+
+.sidebar li a {
+  display: block; }
