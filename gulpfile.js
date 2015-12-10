@@ -1,13 +1,11 @@
 'use strict';
 
 var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+
 var Karma = require('karma').Server;
-var jasmine = require('gulp-jasmine');
-var protractor = require('gulp-protractor').protractor;
-var webdriver_update = require('gulp-protractor').webdriver_update;
 var server = require( __dirname + '/server.js');
-var eslint = require('gulp-eslint');
-var sass = require('gulp-sass');
+var wiredep = require('wiredep').stream;
 
 gulp.task('start_server', function() {
   server.start();
@@ -17,17 +15,37 @@ gulp.task('close_server', function() {
   server.close();
 });
 
-gulp.task('webdriver_update', webdriver_update);
+gulp.task('webdriver_update', $.protractor.webdriver_update);
 
 gulp.task('protractor', ['webdriver_update'], function() {
   return gulp.src(['./test/e2e/*Spec.js'])
-    .pipe(protractor({
+    .pipe($.protractor.protractor({
       configFile: __dirname + '/protractor.conf.js'
     }))
     .on('error', function(e) {throw e;});
 });
 
-gulp.task('karma', function(done) {
+gulp.task('karma-build', function(){
+  gulp.src(__dirname + '/karma.conf.js')
+    .pipe(wiredep({
+      fileTypes: {
+        js: {
+          block: /(([ \t]*)\/\/\s*bower:*(\S*))(\n|\r|.)*?(\/\/\s*endbower)/gi,
+          detect: {
+            js: /['\']([^'\']+\.js)['\'],?/gi,
+            css: /['\']([^'\']+\.js)['\'],?/gi
+          },
+          replace: {
+            js: '"{{filePath}}",',
+            css: '"{{filePath}}",'
+          }
+        }
+      }
+    }))
+    .pipe(gulp.dest(__dirname + '/'));
+});
+
+gulp.task('karma', ['karma-build'], function(done) {
   new Karma({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
@@ -36,7 +54,7 @@ gulp.task('karma', function(done) {
 
 gulp.task('jasmine', function() {
   return gulp.src( __dirname + '/test/server/*Spec.js')
-             .pipe(jasmine())
+             .pipe($.jasmine())
              .on('error', function(e) {throw e;});
 });
 
@@ -46,17 +64,30 @@ gulp.task('lint', function() {
     '!./public/components/**',
     '!./node_modules/**'
   ])
-  .pipe(eslint())
-  .pipe(eslint.format())
-  .pipe(eslint.failAfterError());
+  .pipe($.eslint())
+  .pipe($.eslint.format())
+  .pipe($.eslint.failAfterError());
 });
 
 gulp.task('sass', function() {
   gulp.src('./sass/**/*.scss')
-    .pipe(sass().on('error', sass.logError))
+    .pipe($.sass().on('error', $.sass.logError))
     .pipe(gulp.dest(__dirname + '/public/css'));
 });
 
 gulp.task('sass:watch', function() {
   gulp.watch('./sass/**/*.scss', ['sass']);
 });
+
+gulp.task('wiredep', function() {
+  return gulp.src(__dirname + '/public/index.html')
+    .pipe(wiredep())
+    .pipe($.inject(gulp.src([
+      __dirname + '/public/*.js',
+      __dirname + '/public/controllers/**/*.js',
+      __dirname + '/public/services/**/*.js',
+      __dirname + '/public/css/**/*.css'
+    ]), { relative: true }))
+    .pipe(gulp.dest(__dirname + '/public'));
+});
+
