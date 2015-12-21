@@ -43,5 +43,6 @@ table#contentsTbl tr {
   margin-bottom: -10000px;
   margin-right: 20px; }
 
-.sidebar li a {
+.sidebar li span {
+  cursor: pointer;
   display: block; }

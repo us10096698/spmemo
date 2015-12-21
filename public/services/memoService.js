@@ -16,6 +16,7 @@ function memoService($filter, marked) {
   memoService.remove = remove;
   memoService.update = update;
   memoService.sort = sort;
+  memoService.open = open;
 
   return memoService;
 
@@ -44,7 +45,6 @@ function memoService($filter, marked) {
     if (typeof index != 'undefined') memo.index = index;
   }
 
-
   function getAll() {
     var memos = [];
     var obj = getFromSession();
@@ -54,6 +54,11 @@ function memoService($filter, marked) {
     });
 
     return memos;
+  }
+
+  function open(obj) {
+    storeToSession(obj);
+    return getAll();
   }
 
   function getJsonUrl() {

@@ -277,12 +277,7 @@ describe('Site', function() {
     });
 
     it('should show the filelist of the linked Github Project', function(){
-      githubLink.click();
-      user.clear().sendKeys('us10096698');
-      expect(saveButton.getAttribute('disabled')).toBe('true');
-      repo.clear().sendKeys('spmemo-test');
-      saveButton.click();
-
+      connectToTestRepo();
       expect($('#path').getText()).toBe('us10096698/spmemo-test');
       var files = $$('.file');
 
@@ -290,9 +285,27 @@ describe('Site', function() {
       expect(files.get(0).getText()).toBe('file1.json');
       expect(files.get(1).getText()).toBe('file2.json');
       expect(files.get(2).getText()).toBe('file3.json');
-
-      expect(files.get(0).getAttribute('href')).toBe('https://raw.githubusercontent.com/us10096698/spmemo-test/master/data/file1.json');
     });
+
+    it('should displat a memo on the public Github repository', function() {
+      connectToTestRepo();
+
+      var files = $$('.file');
+      files.get(0).click();
+
+      expect($$('tr.item').count()).toBe(1);
+      var memo1 = $('tr#item0');
+      expect(memo1.$('.title').getText()).toBe('test1');
+      expect(memo1.$('.description').getText()).toBe('doc');
+    });
+
+    function connectToTestRepo() {
+      githubLink.click();
+      user.clear().sendKeys('us10096698');
+      expect(saveButton.getAttribute('disabled')).toBe('true');
+      repo.clear().sendKeys('spmemo-test');
+      saveButton.click();
+    }
   });
 
   function disableAnimation() {

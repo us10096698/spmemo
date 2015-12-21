@@ -19,9 +19,10 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
   vm.importMemo = importMemo;
   vm.removeMemo = removeMemo;
   vm.editMemo = editMemo;
+  vm.openGithubMemo = openGithubMemo;
 
-  vm.path;
-  vm.files;
+  vm.path = githubService.getPath();
+  vm.files = githubService.getFiles();
 
   vm.openAddModal = openAddModal;
   vm.openGithubModal = openGithubModal;
@@ -100,9 +101,17 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
     });
 
     modalInstance.result.then(function(info) {
-      vm.files = githubService.updateFileList(info);
-      vm.path = githubService.getPath();
-      // updateExportUrl();
+      githubService.updateFileList(info).then( function() {
+        vm.files = githubService.getFiles();
+        vm.path = githubService.getPath();
+      });
+    });
+  }
+
+  function openGithubMemo(url) {
+    githubService.openFile(url).then( function(res) {
+      vm.memos = memoService.open(res);
+      updateExportUrl();
     });
   }
 
@@ -132,5 +141,4 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
 
     observer.observe(blocker, observerOpt);
   }
-
 }

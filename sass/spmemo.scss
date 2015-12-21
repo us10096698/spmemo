@@ -58,11 +58,8 @@ table#contentsTbl tr {
   margin-right: 20px;
 }
 
-/* .sidebar ul { */
-  /* list-style: none; */
-/* } */
-
-.sidebar li a{
+.sidebar li span{
+  cursor: pointer;
   display: block;
 }
 

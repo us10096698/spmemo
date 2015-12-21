@@ -14,22 +14,22 @@
   
   <div class = "container-fluid" id="main">
     <div class = "row">
-      <div class="sidebar col-lg-2">
+      <div class="sidebar col-md-2">
         <h4 id="path">{{ vm.path }}</h4>
         <ul ng-repeat="file in vm.files">
-          <li><a class="file" href = "{{ file.url}}" >{{ file.name }}</a></li>
+          <li><span class="file" ng-click="vm.openGithubMemo(file.url)" >{{ file.name }}</span></li>
         </ul>
       </div>
   
-      <div class="col-lg-10 row">
+      <div class="col-md-10 row">
         <table id="contentsTbl" class='table'>
           <tbody ui-sortable="vm.sortableOptions" ng-model="vm.memos">
             <tr id="item{{ $index }}" ng-repeat="memo in vm.memos" class="item">
-              <td class="doc col-lg-4">
+              <td class="doc col-md-4">
                 <h3 class="title">{{ memo.title }}</h3> 
                 <p class="description" ng-bind-html="memo.doc"></p>
               </td>
-              <td class="code col-lg-8">
+              <td class="code col-md-8">
                 <button type="button" class="btn btn-danger btn-xs remove" ng-click="vm.removeMemo($index)" aria-label="Left Align">
                   <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                 </button>

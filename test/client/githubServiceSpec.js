@@ -27,15 +27,30 @@ describe('githubService', function() {
     $httpBackend.expectGET('https://api.github.com/repos/testuser/testrepo/contents/data')
       .respond(data);
 
-    var fileList = githubService.updateFileList({user: 'testuser', repo: 'testrepo'});
+    githubService.updateFileList({user: 'testuser', repo: 'testrepo'})
+      .then(function(fileList) {
+        var expectedFileList = [
+          {name: 'test1.json', url: 'http://example.com/test1.json'},
+          {name: 'test2.json', url: 'http://example.com/test2.json'},
+          {name: 'test3.json', url: 'http://example.com/test3.json'}
+        ];
+    
+        expect(fileList).toEqual(expectedFileList);
+        expect(githubService.getPath()).toBe('testuser/testrepo');
+      });
+
     $httpBackend.flush();
+  });
 
-    var expectedFileList = [
-      {name: 'test1.json', url: 'http://example.com/test1.json'},
-      {name: 'test2.json', url: 'http://example.com/test2.json'},
-      {name: 'test3.json', url: 'http://example.com/test3.json'}
-    ];
+  it('#openFile should return memo object', function() {
+    var data = [{title: 'test1', doc: 'doc', code: 'code'}];
 
-    expect(fileList).toEqual(expectedFileList);
+    $httpBackend.expectGET('https://api.github.com/repos/testuser/testrepo/contents/data/test.json').respond(data);
+    githubService.openFile('https://api.github.com/repos/testuser/testrepo/contents/data/test.json').then(
+      function(ret) {
+        expect(ret).toEqual(data);
+      }
+    );
+    $httpBackend.flush();
   });
 });
