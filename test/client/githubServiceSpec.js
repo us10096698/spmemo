@@ -53,4 +53,17 @@ describe('githubService', function() {
     );
     $httpBackend.flush();
   });
+
+  it('#saveAMemo should call its backend and return the filename when the request is success', function() {
+    var filename = 'hoge';
+
+    $httpBackend.expectPUT('/api/hub')
+      .respond({data: {content: {sha: 'fakesha'}}});
+
+    githubService.saveAMemo(filename).then( function(ret) {
+      expect(ret).toBe(filename);
+    });
+
+    $httpBackend.flush();
+  });
 });
