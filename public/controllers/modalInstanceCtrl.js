@@ -7,7 +7,7 @@ MemoModalInstanceController.$inject = ['$uibModalInstance', 'memoService'];
 
 function MemoModalInstanceController($uibModalInstance, memoService) {
   var vm = this;
-  var item = memoService.get();
+  var item = memoService.getByIndex();
 
   vm.title = item.title;
   vm.doc = item.doc || '';

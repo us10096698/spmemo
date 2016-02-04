@@ -287,9 +287,8 @@ describe('Site', function() {
       expect(files.get(2).getText()).toBe('file3.json');
     });
 
-    it('should displat a memo on the public Github repository', function() {
+    it('should display a memo on the public Github repository', function() {
       connectToTestRepo();
-
       var files = $$('.file');
       files.get(0).click();
 

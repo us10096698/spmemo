@@ -11,16 +11,17 @@ function memoService($filter, marked) {
 
   memoService.getAll = getAll;
   memoService.getJsonUrl = getJsonUrl;
-  memoService.get = get;
+  memoService.getByIndex = getByIndex;
   memoService.set = set;
   memoService.remove = remove;
   memoService.update = update;
   memoService.sort = sort;
   memoService.open = open;
+  memoService.getMemosAsJsonString = getMemosAsJsonString;
 
   return memoService;
 
-  function get(index) {
+  function getByIndex(index) {
     var item;
 
     if(typeof index != 'undefined') {
@@ -106,6 +107,10 @@ function memoService($filter, marked) {
     storeToSession(obj);
   }
 
+  function getMemosAsJsonString() {
+    return sessionStorage.getItem('spmemo');
+  }
+
   function getFromSession() {
     return angular.fromJson(sessionStorage.getItem('spmemo')) || [];
   }
@@ -114,5 +119,4 @@ function memoService($filter, marked) {
     var json = $filter('json')(obj);
     sessionStorage.setItem('spmemo', json);
   }
-
 }

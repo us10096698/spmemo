@@ -6,7 +6,7 @@ describe('githubService', function() {
   var githubService;
   var $httpBackend;
 
-  beforeEach( inject(function($injector) {
+  beforeEach( inject( function($injector) {
     githubService = $injector.get('githubService');
     $httpBackend = $injector.get('$httpBackend');
   }));
@@ -19,9 +19,9 @@ describe('githubService', function() {
   it('#updateFilelist should return a valid file list', function() {
     
     var data = [
-      {name: 'test1.json', download_url: 'http://example.com/test1.json'},
-      {name: 'test2.json', download_url: 'http://example.com/test2.json'},
-      {name: 'test3.json', download_url: 'http://example.com/test3.json'}
+      {name: 'test1.json', download_url: 'http://example.com/test1.json', sha: '123456'},
+      {name: 'test2.json', download_url: 'http://example.com/test2.json', sha: '234567'},
+      {name: 'test3.json', download_url: 'http://example.com/test3.json', sha: '345678'}
     ];
 
     $httpBackend.expectGET('https://api.github.com/repos/testuser/testrepo/contents/data')
@@ -30,9 +30,9 @@ describe('githubService', function() {
     githubService.updateFileList({user: 'testuser', repo: 'testrepo'})
       .then(function(fileList) {
         var expectedFileList = [
-          {name: 'test1.json', url: 'http://example.com/test1.json'},
-          {name: 'test2.json', url: 'http://example.com/test2.json'},
-          {name: 'test3.json', url: 'http://example.com/test3.json'}
+          {name: 'test1.json', url: 'http://example.com/test1.json', sha: '123456'},
+          {name: 'test2.json', url: 'http://example.com/test2.json', sha: '234567'},
+          {name: 'test3.json', url: 'http://example.com/test3.json', sha: '345678'}
         ];
     
         expect(fileList).toEqual(expectedFileList);

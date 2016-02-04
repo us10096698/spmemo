@@ -20,14 +20,20 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
   vm.removeMemo = removeMemo;
   vm.editMemo = editMemo;
   vm.openGithubMemo = openGithubMemo;
+  vm.saveToGithub = saveToGithub;
 
   vm.path = githubService.getPath();
   vm.files = githubService.getFiles();
+  vm.filename = '';
 
   vm.openAddModal = openAddModal;
   vm.openGithubModal = openGithubModal;
   vm.copySucceed = copySucceed;
   vm.copyFailed = copyFailed;
+
+  vm.auth = function() {
+    githubService.auth();
+  };
 
   // highlight
   var blocker = angular.element('#contentsTbl')[0];
@@ -73,7 +79,7 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
   }
 
   function editMemo(index) {
-    var item = memoService.get(index);
+    var item = memoService.getByIndex(index);
     memoService.set(item, index);
     openAddModal();
   }
@@ -108,10 +114,21 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
     });
   }
 
-  function openGithubMemo(url) {
+  function openGithubMemo(name, url) {
     githubService.openFile(url).then( function(res) {
       vm.memos = memoService.open(res);
+      vm.filename = name;
       updateExportUrl();
+    }, function(error){
+      toastr.error('Open failed: ' + error);
+    });
+  }
+
+  function saveToGithub() {
+    githubService.saveAMemo(vm.filename).then( function(res) {
+      toastr.success(res + ': Succesfully saved!');
+    }, function(error) {
+      toastr.error('Save failed: ' + error);
     });
   }
 

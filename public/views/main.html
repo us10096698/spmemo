@@ -9,6 +9,8 @@
       </div>
       <a class="navbar-brand" id="exportLink" href="{{ vm.href_ex }}">Export</a>
       <div class="navbar-brand" id="github" ng-click="vm.openGithubModal()">Github</div>
+      <div class="navbar-brand" id="save-to-github" ng-click="vm.saveToGithub()">Save</div>
+      <a class="navbar-brand" href="api/hub/auth">Sign in with Github</a>
     </nav>
   </div>
   
@@ -17,8 +19,9 @@
       <div class="sidebar col-md-2">
         <h4 id="path">{{ vm.path }}</h4>
         <ul ng-repeat="file in vm.files">
-          <li><span class="file" ng-click="vm.openGithubMemo(file.url)" >{{ file.name }}</span></li>
+          <li><span class="file" ng-click="vm.openGithubMemo(file.name, file.url)" >{{ file.name }}</span></li>
         </ul>
+        <span>Current: {{ vm.filename}}</span>
       </div>
   
       <div class="col-md-10 row">
