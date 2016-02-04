@@ -31,7 +31,7 @@ function memoService($filter, marked) {
     } else {
 
       if (memo.contents == {}) {
-        item = {title: '', doc: '', code: ''};
+        item = {title: '', doc: '', code: []};
       } else {
         item = memo.contents;
         memo.contents = {};

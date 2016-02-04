@@ -18,6 +18,10 @@ gulp.task('close_server', function() {
 
 gulp.task('webdriver_update', $.protractor.webdriver_update);
 
+gulp.task('build', ['sass', 'wiredep'], function(){
+  console.log('Build finished.');
+});
+
 gulp.task('e2e', function() {
   runSequence('start_server', 'protractor', 'close_server');
 });
@@ -97,6 +101,7 @@ gulp.task('wiredep', function() {
       __dirname + '/public/*.js',
       __dirname + '/public/controllers/**/*.js',
       __dirname + '/public/services/**/*.js',
+      __dirname + '/public/directives/**/*.js',
       __dirname + '/public/css/**/*.css'
     ]), { relative: true }))
     .pipe(gulp.dest(__dirname + '/public'));

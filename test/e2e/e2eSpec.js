@@ -3,7 +3,7 @@
 describe('Site', function() {
 
   var addLink, importLink, exportLink;
-  var titleBox, docBox, codeBox, addButton, closeButton;
+  var titleBox, docBox, codeBox, addButton, closeButton, addCodeBox;
 
   beforeEach(function() {
     browser.get('/');
@@ -48,6 +48,7 @@ describe('Site', function() {
       expect(docBox.isDisplayed()).toBe(true);
       expect(codeBox.isDisplayed()).toBe(true);
       expect(addButton.isDisplayed()).toBe(true);
+      expect(addCodeBox.isDisplayed()).toBe(true);
       expect(addButton.getText()).toBe('Save changes');
       expect(addButton.getAttribute('disabled')).toBe('true');
       expect(closeButton.getText()).toBe('Close');
@@ -66,6 +67,26 @@ describe('Site', function() {
       var memo1 = $('tr#item0');
       expect(memo1.$('.title').getText()).toBe('title1');
       expect(memo1.$('.description').getText()).toBe('this is a document');
+    });
+
+    it('should add the second code box', function() {
+      addCodeBox.click();
+      expect($$('.code-box').count()).toBe(2);
+    })
+
+    it('should add a memo with multiple codes', function() {
+      titleBox.clear().sendKeys('memo2');
+      docBox.clear().sendKeys('this is a document');
+      codeBox.clear().sendKeys('var i = 0;');
+
+      addCodeBox.click();
+
+      var newBox = $$('.code-box').get(1);
+      newBox.clear().sendKeys('// second');
+
+      addButton.click();
+
+      expect($$('tr#item0 .code tr').count()).toBe(2);
     });
 
     it('should add second memo without page reload', function() {
@@ -190,7 +211,7 @@ describe('Site', function() {
 
       exportLink.click();
 
-      var expected = JSON.parse('[{"title": "title", "doc": "this is a document", "code": "var i = 0;"}]');
+      var expected = JSON.parse('[{"title": "title", "doc": "this is a document", "code": ["var i = 0;"]}]');
       var content = $('pre');
       content.getText().then(function(text) {
         var output = JSON.parse(text);
@@ -307,9 +328,10 @@ describe('Site', function() {
     addLink.click();
     titleBox = $('#titlebox');
     docBox = $('#docbox');
-    codeBox = $('#codebox');
+    codeBox = $$('.code-box').get(0);
     addButton = $('#addmemo');
     closeButton = $('#close-modal');
+    addCodeBox = $('#add-code');
   }
 
   function addItem(item) {

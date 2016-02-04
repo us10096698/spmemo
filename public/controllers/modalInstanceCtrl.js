@@ -11,8 +11,9 @@ function MemoModalInstanceController($uibModalInstance, memoService) {
 
   vm.title = item.title;
   vm.doc = item.doc || '';
-  vm.code = item.code || '';
+  vm.code = item.code || [];
   vm.errFlag;
+  vm.idx = 1;
 
   vm.addMemo = add;
   vm.closeModal = closeModal;

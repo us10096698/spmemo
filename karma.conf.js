@@ -24,6 +24,7 @@ module.exports = function(config) {
       'public/*.js',
       'public/controllers/*.js',
       'public/services/*.js',
+      'public/directives/*.js',
       'test/client/*Spec.js'
     ],
     exclude: [
