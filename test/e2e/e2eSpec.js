@@ -1,18 +1,9 @@
 'use strict';
-var server = require('../../server');
 
 describe('Site', function() {
 
   var addLink, importLink, exportLink;
   var titleBox, docBox, codeBox, addButton, closeButton;
-
-  beforeAll(function() {
-    server.start();
-  });
-
-  afterAll(function() {
-    server.close();
-  });
 
   beforeEach(function() {
     browser.get('/');
