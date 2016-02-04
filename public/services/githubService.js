@@ -90,6 +90,9 @@ function githubService($http, $q, $filter, memoService) {
 
   function saveAMemo(filename) {
     var deferred = $q.defer();
+
+    if(filename=='') deferred.reject('Current filename is not specified');
+
     var pathUrl = sessionObj.user + '/' + sessionObj.repo + '/contents/data/' + filename;
     var data = {
       path: pathUrl,

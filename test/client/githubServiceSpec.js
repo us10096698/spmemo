@@ -66,4 +66,18 @@ describe('githubService', function() {
 
     $httpBackend.flush();
   });
+
+  it('#saveAMemo should show an error toast when the filename is blank', function() {
+    var filename = '';
+
+    $httpBackend.expectPUT('/api/hub')
+      .respond({data: {content: {sha: 'fakesha'}}});
+
+    githubService.saveAMemo(filename).then( undefined, function(ret) {
+      expect(ret).toBe('Current filename is not specified');
+    });
+
+    $httpBackend.flush();
+
+  });
 });
