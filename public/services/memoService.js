@@ -70,10 +70,19 @@ function memoService($filter, marked) {
     return window.URL.createObjectURL(blob);
   }
 
-  function remove(index) {
+  function remove(memoIdx, codeIdx) {
     var obj = getFromSession();
-    obj.splice(index, 1);
+    var memo = obj[memoIdx];
+    var code = memo['code'];
+
+    if(code.length == 1){
+      obj.splice(memoIdx, 1);
+    } else {
+      code.splice(codeIdx, 1);
+    }
+
     storeToSession(obj);
+    return obj.concat();
   }
 
   function update(item, memos) {

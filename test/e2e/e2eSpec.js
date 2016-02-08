@@ -128,27 +128,39 @@ describe('Site', function() {
   });
 
   describe('#delete', function() {
-    var deleteBtn, code;
+    var firstDeleteBtn, secondDeleteBtn, code;
 
     beforeEach(function() {
       openModal();
-      addItem('title2');
+      addItemWith2Codes('title2');
 
-      code = $('tr#item0 td.code');
-      deleteBtn = code.$('.remove');
+      code = $$('tr#item0 td.code tr');
+      firstDeleteBtn = code.get(0).$('.remove');
+      secondDeleteBtn = code.get(0).$('.remove');
     });
 
     it('should display a delete link to each item', function() {
-      expect(deleteBtn.isDisplayed()).toBe(false);
-      browser.actions().mouseMove(code).perform();
-      expect(deleteBtn.isDisplayed()).toBe(true);
+      expect(firstDeleteBtn.isDisplayed()).toBe(false);
+      browser.actions().mouseMove(code.get(0)).perform();
+      expect(firstDeleteBtn.isDisplayed()).toBe(true);
+      browser.actions().mouseMove(code.get(1)).perform();
+      expect(secondDeleteBtn.isDisplayed()).toBe(true);
     });
 
-    it('should remove an item', function() {
-      browser.actions().mouseMove(code).perform();
-      deleteBtn.click();
-      var memos = $$('tr');
-      expect(memos.count()).toBe(0);
+    it('should remove an code', function() {
+      browser.actions().mouseMove(code.get(0)).perform();
+      firstDeleteBtn.click();
+      var memo = $('tr#item0');
+      expect(memo.isPresent()).toBe(true);
+      expect(memo.$$('td.code tr').count()).toBe(1);
+    });
+
+    it('should remove a memo when there is only one code', function() {
+      browser.actions().mouseMove(code.get(0)).perform();
+      firstDeleteBtn.click();
+      firstDeleteBtn.click();
+      var memo = $('tr#item0');
+      expect(memo.isPresent()).toBe(false);
     });
   });
 

@@ -72,9 +72,8 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
     updateExportUrl();
   }
 
-  function removeMemo(index) {
-    memoService.remove(index);
-    vm.memos.splice(index, 1);
+  function removeMemo(memoIdx, codeIdx) {
+    vm.memos = memoService.remove(memoIdx, codeIdx);
     updateExportUrl();
   }
 
