@@ -21,10 +21,12 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
   vm.editMemo = editMemo;
   vm.openGithubMemo = openGithubMemo;
   vm.saveToGithub = saveToGithub;
+  vm.isActive = isActive;
 
-  vm.path = githubService.getPath();
+  vm.user = githubService.getUser();
+  vm.repo = githubService.getRepo();
   vm.files = githubService.getFiles();
-  vm.filename = '';
+  vm.currentIdx = githubService.getCurrentIdx();
 
   vm.openAddModal = openAddModal;
   vm.openGithubModal = openGithubModal;
@@ -42,7 +44,8 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
   observer.observe(blocker, observerOpt);
 
   $document.ready(function() {
-    angular.element('#lefile')[0].addEventListener('change', handleFileSelect, false);
+    angular.element('#lefile')[0]
+      .addEventListener('change', handleFileSelect, false);
     getAllMemos();
   });
 
@@ -108,15 +111,20 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
     modalInstance.result.then(function(info) {
       githubService.updateFileList(info).then( function() {
         vm.files = githubService.getFiles();
-        vm.path = githubService.getPath();
+        vm.user = githubService.getUser();
+        vm.repo = githubService.getRepo();
+        vm.currentIdx = githubService.getCurrentIdx();
+
+        if(vm.files.length>0) openGithubMemo(0);
       });
     });
   }
 
-  function openGithubMemo(name, url) {
-    githubService.openFile(url).then( function(res) {
+  function openGithubMemo(idx) {
+    githubService.openFile(idx).then( function(res) {
       vm.memos = memoService.open(res);
-      vm.filename = name;
+      vm.currentIdx = githubService.getCurrentIdx();
+
       updateExportUrl();
     }, function(error){
       toastr.error('Open failed: ' + error);
@@ -124,7 +132,7 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
   }
 
   function saveToGithub() {
-    githubService.saveAMemo(vm.filename).then( function(res) {
+    githubService.saveAMemo().then( function(res) {
       toastr.success(res + ': Succesfully saved!');
     }, function(error) {
       toastr.error('Save failed: ' + error);
@@ -156,5 +164,9 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
     });
 
     observer.observe(blocker, observerOpt);
+  }
+
+  function isActive(i) {
+    return (i == vm.currentIdx);
   }
 }

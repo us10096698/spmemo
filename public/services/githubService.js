@@ -7,27 +7,27 @@ githubService.$inject = ['$http', '$q', '$filter', 'memoService'];
 
 function githubService($http, $q, $filter, memoService) {
   var githubService = {};
-  var sessionObj = angular.fromJson(sessionStorage.getItem('spmemo-metadata')) || 
-    {user : "-", repo: '-', files: []};
+  var metadata = angular.fromJson(sessionStorage.getItem('spmemo-metadata')) || 
+    {user : '-', repo: '-', files: [], current: undefined };
+  var urlPrefix = 'https://api.github.com/repos/';
 
   githubService.updateFileList = updateFileList;
-  githubService.getPath = getPath;
+
+  githubService.getUser = getUser;
+  githubService.getRepo = getRepo;
   githubService.getFiles = getFiles;
+  githubService.getCurrentIdx = getCurrentIdx;
+
   githubService.openFile = openFile;
   githubService.saveAMemo = saveAMemo;
   githubService.auth = auth;
 
-  var urlPrefix = 'https://api.github.com/repos/';
-
   return githubService;
   
-  function getPath() {
-    return sessionObj.user + '/' + sessionObj.repo;
-  }
-
-  function getFiles() {
-    return sessionObj.files;
-  }
+  function getUser() { return metadata.user; }
+  function getRepo() { return metadata.repo; }
+  function getFiles() { return metadata.files; }
+  function getCurrentIdx() { return metadata.current; }
 
   function auth() {
     $http.get('/api/hub/auth').then(
@@ -49,7 +49,9 @@ function githubService($http, $q, $filter, memoService) {
       method: 'GET',
       url: 'https://api.github.com/repos/' +
         user + '/' + repo + '/contents/data'
-    }).then(function success(res) {
+    })
+    .then(function success(res) {
+
       res.data.forEach( function(file, index, object){
         fileList.push({
           name: file.name,
@@ -58,11 +60,12 @@ function githubService($http, $q, $filter, memoService) {
         });
       });
 
-      sessionObj.user = user;
-      sessionObj.repo = repo;
-      sessionObj.files = fileList;
+      metadata.user = user;
+      metadata.repo = repo;
+      metadata.files = fileList;
+      metadata.current = -1;
 
-      sessionStorage.setItem('spmemo-metadata', $filter('json')(sessionObj));
+      sessionStorage.setItem('spmemo-metadata', $filter('json')(metadata));
 
       deferred.resolve(fileList);
 
@@ -73,13 +76,16 @@ function githubService($http, $q, $filter, memoService) {
     return deferred.promise;
   }
 
-  function openFile(url) {
+  function openFile(idx) {
     var deferred = $q.defer();
 
     $http({
-      method: 'GET', 
-      url: url
-    }).then(function success(res) {
+      method: 'GET',
+      url: this.getFiles()[idx].url
+    })
+    .then(function success(res) {
+      metadata.current = idx;
+      sessionStorage.setItem('spmemo-metadata', $filter('json')(metadata));
       deferred.resolve(res.data);
     }, function error(res) {
       deferred.reject(res);
@@ -88,12 +94,14 @@ function githubService($http, $q, $filter, memoService) {
     return deferred.promise;
   }
 
-  function saveAMemo(filename) {
+  function saveAMemo() {
     var deferred = $q.defer();
+    var filename = this.getFiles()[this.getCurrentIdx()].name;
 
-    if(filename=='') deferred.reject('Current filename is not specified');
+    if ( filename == '')
+      deferred.reject('Current filename is not specified');
 
-    var pathUrl = sessionObj.user + '/' + sessionObj.repo + '/contents/data/' + filename;
+    var pathUrl = metadata.user + '/' + metadata.repo + '/contents/data/' + filename;
     var data = {
       path: pathUrl,
       sha: getSha(filename),
@@ -107,8 +115,8 @@ function githubService($http, $q, $filter, memoService) {
       port: 3000,
       data: angular.toJson(data)
     }).then(function success(res) {
-      sessionObj.files.filter( function(item, index) {
-        if (item.name == filename){
+      metadata.files.filter( function(item, index) {
+        if (item.name == filename) {
           item.sha = res.data.content.sha;
         }
       });

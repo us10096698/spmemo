@@ -108,10 +108,8 @@ function getCode(req, res) {
     scope: 'repo'
   });
 
-  var pathPrefix = config.proxy ? 'https://github.com' : '';
-
   res.writeHead( 303, {
-    Location: pathPrefix + '/login/oauth/authorize?' + query
+    Location: 'https://github.com/login/oauth/authorize?' + query
   });
 
   res.end();

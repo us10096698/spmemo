@@ -36,7 +36,8 @@ describe('githubService', function() {
         ];
     
         expect(fileList).toEqual(expectedFileList);
-        expect(githubService.getPath()).toBe('testuser/testrepo');
+        expect(githubService.getUser()).toBe('testuser');
+        expect(githubService.getRepo()).toBe('testrepo');
       });
 
     $httpBackend.flush();
@@ -45,8 +46,13 @@ describe('githubService', function() {
   it('#openFile should return memo object', function() {
     var data = [{title: 'test1', doc: 'doc', code: 'code'}];
 
+    spyOn(githubService, 'getFiles').and.returnValue([
+          {name: 'test.json', url: 'https://api.github.com/repos/testuser/testrepo/contents/data/test.json', sha: '123456'},
+    ]);
+
     $httpBackend.expectGET('https://api.github.com/repos/testuser/testrepo/contents/data/test.json').respond(data);
-    githubService.openFile('https://api.github.com/repos/testuser/testrepo/contents/data/test.json').then(
+
+    githubService.openFile(0).then(
       function(ret) {
         expect(ret).toEqual(data);
       }
@@ -57,27 +63,19 @@ describe('githubService', function() {
   it('#saveAMemo should call its backend and return the filename when the request is success', function() {
     var filename = 'hoge';
 
+    spyOn(githubService, 'getFiles').and.returnValue([
+          {name: filename, url: 'fakeUrl', sha: 'fakesha'},
+    ]);
+    spyOn(githubService, 'getCurrentIdx').and.returnValue(0);
+
     $httpBackend.expectPUT('/api/hub')
       .respond({data: {content: {sha: 'fakesha'}}});
 
-    githubService.saveAMemo(filename).then( function(ret) {
+    githubService.saveAMemo().then( function(ret) {
       expect(ret).toBe(filename);
     });
 
     $httpBackend.flush();
   });
 
-  it('#saveAMemo should show an error toast when the filename is blank', function() {
-    var filename = '';
-
-    $httpBackend.expectPUT('/api/hub')
-      .respond({data: {content: {sha: 'fakesha'}}});
-
-    githubService.saveAMemo(filename).then( undefined, function(ret) {
-      expect(ret).toBe('Current filename is not specified');
-    });
-
-    $httpBackend.flush();
-
-  });
 });

@@ -288,7 +288,8 @@ describe('Site', function() {
     var errors = $$('.error-msg')
 
     it('should show a header-link and modal dialog', function() {
-      expect(githubLink.getText()).toBe('Github');
+      $('i.fa-github').click();
+      expect(githubLink.getText()).toBe('Open Repo');
       githubLink.click();
 
       expect(user.isPresent()).toBe(true);
@@ -308,7 +309,6 @@ describe('Site', function() {
 
     it('should show the filelist of the linked Github Project', function(){
       connectToTestRepo();
-      expect($('#path').getText()).toBe('us10096698/spmemo-test');
       var files = $$('.file');
 
       expect(files.count()).toBe(3);
@@ -329,6 +329,7 @@ describe('Site', function() {
     });
 
     function connectToTestRepo() {
+      $('i.fa-github').click();
       githubLink.click();
       user.clear().sendKeys('us10096698');
       expect(saveButton.getAttribute('disabled')).toBe('true');

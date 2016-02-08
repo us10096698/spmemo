@@ -8,6 +8,7 @@ module.exports = function(config) {
       // bower:js
       'public/components/jquery/dist/jquery.js',
       'public/components/angular/angular.js',
+      'public/components/bootstrap/dist/js/bootstrap.js',
       'public/components/angular-route/angular-route.js',
       'public/components/angular-bootstrap/ui-bootstrap-tpls.js',
       'public/components/angular-sanitize/angular-sanitize.js',
