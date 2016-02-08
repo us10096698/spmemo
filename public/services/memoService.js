@@ -36,6 +36,7 @@ function memoService($filter, marked) {
         item = memo.contents;
         memo.contents = {};
       }
+
     }
 
     return item;

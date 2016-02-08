@@ -46,7 +46,6 @@ describe('Site', function() {
     it('should show a modal dialog', function() {
       expect(titleBox.isDisplayed()).toBe(true);
       expect(docBox.isDisplayed()).toBe(true);
-      expect(codeBox.isDisplayed()).toBe(true);
       expect(addButton.isDisplayed()).toBe(true);
       expect(addCodeBox.isDisplayed()).toBe(true);
       expect(addButton.getText()).toBe('Save changes');
@@ -71,12 +70,16 @@ describe('Site', function() {
 
     it('should add the second code box', function() {
       addCodeBox.click();
+      addCodeBox.click();
       expect($$('.code-box').count()).toBe(2);
     })
 
     it('should add a memo with multiple codes', function() {
       titleBox.clear().sendKeys('memo2');
       docBox.clear().sendKeys('this is a document');
+
+      addCodeBox.click();
+      codeBox = $$('.code-box').get(0);
       codeBox.clear().sendKeys('var i = 0;');
 
       addCodeBox.click();
@@ -150,34 +153,37 @@ describe('Site', function() {
   });
 
   describe('#edit', function() {
-    var editBtn, code;
+    var editBtn, title;
 
     beforeEach(function() {
-
       openModal();
-      addItem('title');
+      addItemWith2Codes('title');
 
-      code = $('tr#item0 td.code');
-      editBtn = code.$('.edit');
+      title = $('tr#item0 td.doc');
+      editBtn = title.$('.edit');
     });
 
     it('should display an edit link to each item', function() {
       expect(editBtn.isDisplayed()).toBe(false);
-      browser.actions().mouseMove(code).perform();
+      browser.actions().mouseMove(title).perform();
       expect(editBtn.isDisplayed()).toBe(true);
     });
 
     it('should open a modal dialog with the information of the memo', function() {
-      browser.actions().mouseMove(code).perform();
+      browser.actions().mouseMove(title).perform();
       editBtn.click();
+      var secondCodeBox = $$('.code-box').get(1);
+
+      expect($$('.code-box').count()).toBe(2);
       expect(titleBox.isDisplayed()).toBe(true);
       expect(titleBox.getAttribute('value')).toBe('title');
       expect(docBox.getAttribute('value')).toBe('this is a document');
       expect(codeBox.getAttribute('value')).toBe('var i = 0;');
+      expect(secondCodeBox.getAttribute('value')).toBe('var j = 0;');
     });
 
     it('should edit the memo', function() {
-      browser.actions().mouseMove(code).perform();
+      browser.actions().mouseMove(title).perform();
       editBtn.click();
       titleBox.clear().sendKeys('edited');
       addButton.click();
@@ -190,7 +196,7 @@ describe('Site', function() {
       openModal();
       addItem('item2');
 
-      browser.actions().mouseMove(code).perform();
+      browser.actions().mouseMove(title).perform();
       editBtn.click();
       titleBox.clear().sendKeys('edited');
       addButton.click();
@@ -337,7 +343,26 @@ describe('Site', function() {
   function addItem(item) {
     titleBox.clear().sendKeys(item);
     docBox.clear().sendKeys('this is a document');
+
+    addCodeBox.click();
+    codeBox = $$('.code-box').get(0);
     codeBox.clear().sendKeys('var i = 0;');
+
+    addButton.click();
+  }
+
+  function addItemWith2Codes(item) {
+    titleBox.clear().sendKeys(item);
+    docBox.clear().sendKeys('this is a document');
+
+    addCodeBox.click();
+    codeBox = $$('.code-box').get(0);
+    codeBox.clear().sendKeys('var i = 0;');
+
+    addCodeBox.click();
+    var newCodeBox = $$('.code-box').get(1);
+    newCodeBox.clear().sendKeys('var j = 0;');
+
     addButton.click();
   }
 });

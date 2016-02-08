@@ -13,10 +13,10 @@ function MemoModalInstanceController($uibModalInstance, memoService) {
   vm.doc = item.doc || '';
   vm.code = item.code || [];
   vm.errFlag;
-  vm.idx = 1;
 
   vm.addMemo = add;
   vm.closeModal = closeModal;
+  vm.addCodeBox = addCodeBox;
 
   function add() {
     errorCheck();
@@ -24,6 +24,10 @@ function MemoModalInstanceController($uibModalInstance, memoService) {
       var item = {title: vm.title, doc: vm.doc, code: vm.code};
       $uibModalInstance.close(item);
     }
+  }
+
+  function addCodeBox() {
+    vm.code.push('');
   }
 
   function closeModal() {
