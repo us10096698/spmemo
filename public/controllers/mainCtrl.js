@@ -138,8 +138,8 @@ function MainController($http, $document, $uibModal,
   function saveToGithub() {
     githubService.saveAMemo().then( function(res) {
       toastr.success(res + ': Succesfully saved!');
-    }, function(error) {
-      toastr.error('Save failed: ' + error);
+    }, function(res) {
+      toastr.error('Save failed: ' + res.error_description);
     });
   }
 

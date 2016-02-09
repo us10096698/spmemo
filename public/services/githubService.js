@@ -12,13 +12,12 @@ function githubService($http, $q, $filter, memoService, storageService) {
   var metadata = sessionStorage.spmemo_metadata 
   var urlPrefix = 'https://api.github.com/repos/';
 
-  githubService.updateFileList = updateFileList;
-
   githubService.getUser = getUser;
   githubService.getRepo = getRepo;
   githubService.getFiles = getFiles;
   githubService.getCurrentIdx = getCurrentIdx;
 
+  githubService.updateFileList = updateFileList;
   githubService.openFile = openFile;
   githubService.saveAMemo = saveAMemo;
   githubService.auth = auth;
@@ -116,6 +115,8 @@ function githubService($http, $q, $filter, memoService, storageService) {
       port: 3000,
       data: angular.toJson(data)
     }).then(function success(res) {
+      if(res.data.content == undefined)
+        deferred.reject(res.data);
       metadata.files.filter( function(item, index) {
         if (item.name == filename) {
           item.sha = res.data.content.sha;
