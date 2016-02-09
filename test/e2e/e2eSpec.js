@@ -7,7 +7,8 @@ describe('Site', function() {
 
   beforeEach(function() {
     browser.get('/');
-    browser.executeScript('window.sessionStorage.removeItem("spmemo");');
+    browser.executeScript('window.sessionStorage.removeItem("ngStorage-spmemo");');
+    browser.executeScript('window.sessionStorage.removeItem("ngStorage-spmemo_metadata");');
     browser.get('/');
     disableAnimation();
 

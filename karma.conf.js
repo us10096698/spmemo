@@ -20,6 +20,7 @@ module.exports = function(config) {
       'public/components/angular-animate/angular-animate.js',
       'public/components/jquery-ui/jquery-ui.js',
       'public/components/angular-ui-sortable/sortable.js',
+      'public/components/ngstorage/ngStorage.js',
       // endbower
       'public/components/angular-mocks/angular-mocks.js',
       'public/*.js',

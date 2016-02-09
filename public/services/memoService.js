@@ -3,11 +3,13 @@
 angular.module('spmemo')
   .factory('memoService', memoService);
 
-memoService.$inject = ['$filter', 'marked'];
+memoService.$inject = ['$filter', 'marked', 'storageService'];
 
-function memoService($filter, marked) {
+function memoService($filter, marked, storageService) {
   var memoService = {};
+
   var memo = { index: -1, contents: {} };
+  var sessionStorage = storageService.all();
 
   memoService.getAll = getAll;
   memoService.getJsonUrl = getJsonUrl;
@@ -25,7 +27,7 @@ function memoService($filter, marked) {
     var item;
 
     if(typeof index != 'undefined') {
-      var obj = getFromSession();
+      var obj = sessionStorage.spmemo;
       item = obj[index];
 
     } else {
@@ -49,7 +51,7 @@ function memoService($filter, marked) {
 
   function getAll() {
     var memos = [];
-    var obj = getFromSession();
+    var obj = sessionStorage.spmemo;
 
     obj.forEach( function(item, index, object) {
       memos[index] = {title: item.title, doc: marked(item.doc), code: item.code};
@@ -59,19 +61,19 @@ function memoService($filter, marked) {
   }
 
   function open(obj) {
-    storeToSession(obj);
+    sessionStorage.spmemo = obj;
     return getAll();
   }
 
   function getJsonUrl() {
-    var blob = new Blob([sessionStorage.getItem('spmemo')], {'type': 'application/json'});
+    var blob = new Blob([this.getMemosAsJsonString()], {'type': 'application/json'});
     window.URL = window.URL || window.webkitURL;
 
     return window.URL.createObjectURL(blob);
   }
 
   function remove(memoIdx, codeIdx) {
-    var obj = getFromSession();
+    var obj = sessionStorage.spmemo;
     var memo = obj[memoIdx];
     var code = memo['code'];
 
@@ -81,12 +83,12 @@ function memoService($filter, marked) {
       code.splice(codeIdx, 1);
     }
 
-    storeToSession(obj);
+    sessionStorage.spmemo = obj;
     return obj.concat();
   }
 
   function update(item, memos) {
-    var obj = getFromSession();
+    var obj = sessionStorage.spmemo;
     var index = memo.index;
     var markedItem = {
       title: item.title,
@@ -103,30 +105,20 @@ function memoService($filter, marked) {
       obj.push(item);
       memos.push(markedItem);
     }
-
-    storeToSession(obj);
+    sessionStorage.spmemo = obj;
   }
 
   function sort(beforeIdx, afterIdx) {
-    var obj = getFromSession();
+    var obj = sessionStorage.spmemo;
     var itemToMove = obj[beforeIdx];
 
     obj.splice(beforeIdx, 1);
     obj.splice(afterIdx, 0, itemToMove);
 
-    storeToSession(obj);
+    sessionStorage.spmemo = obj;
   }
 
   function getMemosAsJsonString() {
-    return sessionStorage.getItem('spmemo');
-  }
-
-  function getFromSession() {
-    return angular.fromJson(sessionStorage.getItem('spmemo')) || [];
-  }
-
-  function storeToSession(obj) {
-    var json = $filter('json')(obj);
-    sessionStorage.setItem('spmemo', json);
+    return angular.toJson(sessionStorage.spmemo);
   }
 }

@@ -3,11 +3,15 @@
 angular.module('spmemo')
     .controller('MainController', MainController);
 
-MainController.$inject = ['$http', '$document', '$uibModal', 'memoService', '$scope', 'toastr', 'githubService'];
+MainController.$inject = ['$http', '$document', '$uibModal',
+  'memoService', '$scope', 'toastr', 'githubService', 'storageService'];
 
-function MainController($http, $document, $uibModal, memoService, $scope, toastr, githubService) {
+function MainController($http, $document, $uibModal,
+    memoService, $scope, toastr, githubService, storageService) {
 
   var vm = this;
+  var sessionStorage = storageService.all();
+
   vm.memos = [];
   vm.href_ex = '';
 
@@ -60,7 +64,7 @@ function MainController($http, $document, $uibModal, memoService, $scope, toastr
     reader.onload = (function(theFile) {
       return function(e) {
         $scope.$apply(function() {
-          sessionStorage.setItem('spmemo', e.target.result);
+          sessionStorage.spmemo = e.target.result;
           getAllMemos();
         });
       };

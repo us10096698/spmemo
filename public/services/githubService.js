@@ -3,12 +3,13 @@
 angular.module('spmemo')
   .factory('githubService', githubService);
 
-githubService.$inject = ['$http', '$q', '$filter', 'memoService'];
+githubService.$inject = ['$http', '$q', '$filter', 'memoService', 'storageService'];
 
-function githubService($http, $q, $filter, memoService) {
+function githubService($http, $q, $filter, memoService, storageService) {
   var githubService = {};
-  var metadata = angular.fromJson(sessionStorage.getItem('spmemo-metadata')) || 
-    {user : '-', repo: '-', files: [], current: undefined };
+
+  var sessionStorage = storageService.all();
+  var metadata = sessionStorage.spmemo_metadata 
   var urlPrefix = 'https://api.github.com/repos/';
 
   githubService.updateFileList = updateFileList;
@@ -65,7 +66,7 @@ function githubService($http, $q, $filter, memoService) {
       metadata.files = fileList;
       metadata.current = -1;
 
-      sessionStorage.setItem('spmemo-metadata', $filter('json')(metadata));
+      sessionStorage.spmemo_metadata = metadata;
 
       deferred.resolve(fileList);
 
@@ -85,7 +86,7 @@ function githubService($http, $q, $filter, memoService) {
     })
     .then(function success(res) {
       metadata.current = idx;
-      sessionStorage.setItem('spmemo-metadata', $filter('json')(metadata));
+      sessionStorage.spmemo_metadata = metadata;
       deferred.resolve(res.data);
     }, function error(res) {
       deferred.reject(res);
