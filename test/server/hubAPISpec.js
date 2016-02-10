@@ -103,4 +103,22 @@ describe('hubAPI', function() {
     });
   });
 
+  describe('#signOut', function() {
+    it('should destroy session and redirect to the toppage', function() {
+      req = {};
+      res = {
+        redirect: function(){},
+      };
+
+      req.session = {access_token : 'faketoken', destroy: function(){}};
+      spyOn(res, 'redirect');
+      spyOn(req.session, 'destroy');
+
+      hubAPI.signOut(req, res);
+
+      expect(req.session.destroy).toHaveBeenCalled();
+      expect(res.redirect).toHaveBeenCalledWith(302, config.serviceUrl);
+    });
+  });
+
 });

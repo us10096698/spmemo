@@ -115,7 +115,15 @@ function getCode(req, res) {
   res.end();
 }
 
+function signOut(req, res) {
+  req.session.destroy(function(err){
+    if(err!=undefined) console.log(err);
+  });
+  res.redirect(302, config.serviceUrl);
+}
+
 module.exports = {
   saveFile: saveFile,
-  auth: auth
+  auth: auth,
+  signOut: signOut
 };
