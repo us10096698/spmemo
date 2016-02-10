@@ -24,11 +24,12 @@ function memoService($filter, marked, storageService) {
   return memoService;
 
   function getByIndex(index) {
-    var item;
+    var item = {};
 
     if(typeof index != 'undefined') {
-      var obj = sessionStorage.spmemo;
-      item = obj[index];
+
+      angular.extend(item, sessionStorage.spmemo[index]);
+      item.code = item.code.concat();
 
     } else {
 
