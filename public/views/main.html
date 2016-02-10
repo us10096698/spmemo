@@ -39,12 +39,12 @@
 
     <div class = "row">
       <div class="sidebar col-sm-3 col-md-2">
-        <!-- <p id="path">{{ vm.path }}</p> -->
         <ul class="nav nav-sidebar" ng-repeat="(i, file) in vm.files">
           <li ng-class="{ active: vm.isActive(i)}"><a class="file" ng-click="vm.openGithubMemo(i)" >{{ file.name }}</a></li>
         </ul>
         <span>Connected to:</span>
-          <small>{{ vm.user }}/{{ vm.repo }} </small>
+        <p>{{ vm.user }}/{{ vm.repo }} </p>
+        <p>Login status: {{ vm.loginstatus }} </p>
       </div>
   
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

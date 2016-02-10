@@ -21,6 +21,7 @@ function githubService($http, $q, $filter, memoService, storageService) {
   githubService.openFile = openFile;
   githubService.saveAMemo = saveAMemo;
   githubService.auth = auth;
+  githubService.isSignedIn = isSignedIn;
 
   return githubService;
   
@@ -115,14 +116,32 @@ function githubService($http, $q, $filter, memoService, storageService) {
       port: 3000,
       data: angular.toJson(data)
     }).then(function success(res) {
-      if(res.data.content == undefined)
-        deferred.reject(res.data);
-      metadata.files.filter( function(item, index) {
-        if (item.name == filename) {
-          item.sha = res.data.content.sha;
-        }
-      });
-      deferred.resolve(filename);
+      if(res.data.content == undefined) {
+        deferred.reject(res.data.message);
+      } else {
+        metadata.files.filter( function(item, index) {
+          if (item.name == filename) {
+            item.sha = res.data.content.sha;
+          }
+          deferred.resolve(filename);
+        });
+      }
+    }, function error(res) {
+      deferred.reject(res);
+    });
+
+    return deferred.promise;
+  }
+
+  function isSignedIn() {
+    var deferred = $q.defer();
+
+    $http({
+      method: 'GET',
+      url: '/api/hub/status',
+      port: 3000
+    }).then(function success(res) {
+      deferred.resolve(res.data.status);
     }, function error(res) {
       deferred.reject(res);
     });

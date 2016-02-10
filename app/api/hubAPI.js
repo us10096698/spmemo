@@ -122,8 +122,15 @@ function signOut(req, res) {
   res.redirect(302, config.serviceUrl);
 }
 
+function getStatus(req, res) {
+  var status = false;
+  if(req.session.access_token) status = true;
+  res.send({"status": status});
+}
+
 module.exports = {
   saveFile: saveFile,
   auth: auth,
-  signOut: signOut
+  signOut: signOut,
+  getStatus: getStatus
 };

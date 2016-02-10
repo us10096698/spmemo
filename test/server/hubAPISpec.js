@@ -121,4 +121,26 @@ describe('hubAPI', function() {
     });
   });
 
+  describe('#getStatus', function() {
+    beforeEach(function() {
+      req = {};
+      res = {
+        send: function(){},
+      };
+      spyOn(res, 'send');
+    });
+
+    it('should return true if session has an access_token', function(){
+      req.session = {access_token : 'faketoken'};
+      hubAPI.getStatus(req, res);
+      expect(res.send).toHaveBeenCalledWith({'status': true});
+    });
+
+    it('should return false if session doesnt have an access_token', function(){
+      req.session = {};
+      hubAPI.getStatus(req, res);
+      expect(res.send).toHaveBeenCalledWith({'status': false});
+    });
+  });
+
 });

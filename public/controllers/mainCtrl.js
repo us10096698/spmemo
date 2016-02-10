@@ -26,6 +26,7 @@ function MainController($http, $document, $uibModal,
   vm.openGithubMemo = openGithubMemo;
   vm.saveToGithub = saveToGithub;
   vm.isActive = isActive;
+  vm.loginstatus = isSignedIn();
 
   vm.user = githubService.getUser();
   vm.repo = githubService.getRepo();
@@ -139,7 +140,7 @@ function MainController($http, $document, $uibModal,
     githubService.saveAMemo().then( function(res) {
       toastr.success(res + ': Succesfully saved!');
     }, function(res) {
-      toastr.error('Save failed: ' + res.error_description);
+      toastr.error('Save failed: ' + res);
     });
   }
 
@@ -173,4 +174,16 @@ function MainController($http, $document, $uibModal,
   function isActive(i) {
     return (i == vm.currentIdx);
   }
+
+  function isSignedIn() {
+    githubService.isSignedIn().then(
+      function(res) {
+        vm.loginstatus = 'false';
+        if(res) {
+          vm.loginstatus = 'true';
+        }
+      }, function(err) {
+        toastr.error('Check status failed: ' + err);
+      });
+  };
 }

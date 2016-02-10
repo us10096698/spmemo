@@ -78,4 +78,14 @@ describe('githubService', function() {
     $httpBackend.flush();
   });
 
+  it('#isSignedIn should return current login status', function() {
+    $httpBackend.expectGET('/api/hub/status')
+      .respond({status: true});
+    githubService.isSignedIn().then(function(ret) {
+      expect(ret).toEqual(true);
+    });
+
+    $httpBackend.flush();
+
+  });
 });
