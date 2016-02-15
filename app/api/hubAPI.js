@@ -1,14 +1,12 @@
 'use strict';
 
-var config = require('../../config/env.json')[process.env.NODE_ENV || 'dev-local'];
-var protocol = config.proxy ? config.proxy.protocol : 'https';
-var http = require(protocol);
+var config = require('../../config/config').configFactory();
+var http = require(config.protocol);
 var querystring = require('querystring');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 function saveFile(req, res) {
-  var pathPrefix = config.proxy ? 'https://api.github.com/repos/' : '/repos/';
   var reqBody = req.body;
   var path = reqBody.path;
   var buffer = new Buffer(reqBody.content);
@@ -18,9 +16,9 @@ function saveFile(req, res) {
     'message': reqBody.message
   });
   var options = {
-    host: config.proxy ? config.proxy.host : 'api.github.com',
-    port: config.proxy ? config.proxy.port : 443,
-    path: pathPrefix + path,
+    host: config.saveHost,
+    port: config.hubPort,
+    path: config.savePath + path,
     method: 'PUT',
     headers: {
       'Authorization': 'bearer ' + req.session.access_token, //TODO: error handling
@@ -30,15 +28,15 @@ function saveFile(req, res) {
     }
   };
 
-  var body = '';
+  var resBody = '';
   var request = http.request(options, function(response) {
     response.setEncoding('utf8');
     response.on('data', function(chunk) {
-      body += chunk;
+      resBody += chunk;
     });
 
     response.on('end', function() {
-      res.status(200).json(JSON.parse(body));
+      res.status(200).json(JSON.parse(resBody));
     });
   });
 
@@ -63,7 +61,6 @@ function auth(req, res) {
     getCode(req, res);
 
   } else {
-    var pathPrefix = config.proxy ? 'https://github.com' : '';
     var query = querystring.stringify({
       'client_id': config.clientId,
       'client_secret': config.clientSecret,
@@ -71,9 +68,9 @@ function auth(req, res) {
       'redirect_uri': config.serviceUrl
     });
     var options = {
-      host: config.proxy ? config.proxy.host : 'github.com',
-      port: config.proxy ? config.proxy.port : 443,
-      path: pathPrefix + '/login/oauth/access_token?' + query,
+      host: config.authHost,
+      port: config.hubPort,
+      path: config.authPath + '/login/oauth/access_token?' + query,
       method: 'POST',
       headers: {
         'Accept': 'application/json'
@@ -82,14 +79,14 @@ function auth(req, res) {
 
     var request = http.request(options, function(response) {
       response.setEncoding('utf8');
-      var body = '';
+      var resBody = '';
 
       response.on('data', function(chunk) {
-        body += chunk;
+        resBody += chunk;
       });
 
       response.on('end', function() {
-        var access_token = JSON.parse(body).access_token;
+        var access_token = JSON.parse(resBody).access_token;
         req.session.access_token = access_token;
         res.redirect(302, config.serviceUrl);
       });

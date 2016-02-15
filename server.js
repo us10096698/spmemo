@@ -5,20 +5,19 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var session = require('express-session');
 
-var config = require(__dirname + '/config/env.json')[process.env.NODE_ENV || 'dev-local'];
-
 var hub = require(__dirname + '/app/routes/hub');
 var app = express();
 
-var port = config.appPort || process.env.PORT;
+var config = require(__dirname + '/config/config').configFactory();
+var port = config.servicePort;
 
 exports.start = function() {
   if (!this.server) {
     app.use(express.static(__dirname + '/public'));
     app.use(bodyParser.urlencoded({'extended':'true'}));
     app.use(bodyParser.json());
-    app.use(bodyParser.json({ type: 'application/vnd.api+json' })); //parse application/vnd.api+json as json
-    app.use(methodOverride()); //simulate DELETE/PUT
+    app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
+    app.use(methodOverride());
 
     // session
     var session_opt = {

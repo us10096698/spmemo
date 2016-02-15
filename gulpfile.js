@@ -38,7 +38,7 @@ gulp.task('protractor', ['webdriver_update'], function() {
     .on('error', function(e) {throw e;});
 });
 
-gulp.task('karma-build', function() {
+gulp.task('karma_build', function() {
   gulp.src(__dirname + '/karma.conf.js')
     .pipe(wiredep({
       fileTypes: {
@@ -58,7 +58,7 @@ gulp.task('karma-build', function() {
     .pipe(gulp.dest(__dirname + '/'));
 });
 
-gulp.task('karma', ['karma-build'], function(done) {
+gulp.task('karma', ['karma_build'], function(done) {
   new Karma({
     configFile: __dirname + '/karma.conf.js',
     singleRun: true

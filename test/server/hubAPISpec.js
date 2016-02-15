@@ -2,7 +2,7 @@
 
 var nock = require('nock');
 var hubAPI = require('../../app/api/hubAPI');
-var config = require('../../config/env.json')[process.env.NODE_ENV || 'dev-local'];
+var config = require('../../config/config').configFactory();
 
 describe('hubAPI', function() {
   var req, res;
@@ -39,8 +39,8 @@ describe('hubAPI', function() {
       req.query.code = 'fakecode';
       req.session = {access_token : undefined};
 
-      var host = config.proxy ? 'http://' + config.proxy.host + ':8080' : 'https://github.com';
-      var pathPrefix = config.proxy ? 'https://github.com' : '';
+      var host = config.protocol + '://' +
+        config.authHost + ':' + config.hubPort;
 
       var query =
         'client_id=' + config.clientId + '&client_secret=' + config.clientSecret +
@@ -52,7 +52,7 @@ describe('hubAPI', function() {
         .defaultReplyHeaders({
           'Content-Type': 'application/json'
         })
-        .post(pathPrefix + '/login/oauth/access_token?' + query)
+        .post(config.authPath + '/login/oauth/access_token?' + query)
         .reply(201, {access_token: 'faketoken'});
 
       hubAPI.auth(req, res);
@@ -78,15 +78,16 @@ describe('hubAPI', function() {
       res.status = jasmine.createSpy('status').and.returnValue(json);
       json.json = jasmine.createSpy('json');
 
-      var pathPrefix = config.proxy ? 'https://api.github.com/repos/' : '/repos/';
-      var host = config.proxy ? 'http://' + config.proxy.host + ':8080' : 'https://api.github.com';
+      var host = config.protocol + '://' +
+        config.saveHost + ':' + config.hubPort;
+
       var resbody = {message: 'ok'};
 
       var fake = nock(host)
         .defaultReplyHeaders({
           'Content-Type': 'application/json'
         })
-        .put(pathPrefix + req.body.path)
+        .put(config.savePath + req.body.path)
         .reply(201, resbody);
 
       hubAPI.saveFile(req, res);

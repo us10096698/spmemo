@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+- 4.2
+env:
+  global:
+    - SPMEMO_PORT=3000
+    - SPMEMO_SERVICE_URL=http://localhost:3000
+    - SPMEMO_USE_PROXY=false
+    - secure: CzEZkER69L979t3yCZ5D/H0XPK9FLKO5U76N2bJ3hi1qQ4MVUMBT94Dq3CZZWfu+ng+dMKjQQMy3c8Od83G7BgnqVTXZIbyu5s5ex4k2LpdhOr+4EoLJMBreWD/m0lqHjQ/sdQmCmRbl9M1fIsJkxxWZFmGC8X19SsqygY1Xtx/L8RvNHIhw3F4ZorQzsg8/JehJjuN6++fkikTqmIlN3ctaTPcWvSK2a1O/PD5rHIOpVkrNOhJ+kLSP10a770+QQsPONithQgQ+ch+C+0VpMW2217MoXJmAY0v7PcqhVQrUYtep+iX8ad1UhUhX7hTE7qGsU42qSzgqIbmboo3vbQdmuR/0sWJef8bVcjYRJrUYSPvmOXyv2YR2d7kayUv5MxVfODslJBJpGDJYjqgysAKSdiDs0S1jPuXYbKO2Q1ZZHtdY552ss4qE5WThy+I9hMpdXzJ4ocVkCI9cFnQpwBq7PePzMC9PDkHrltLtp1rd5LZ7brbeH50wdsR0TnY99CyiJDIxDizBSQfulnuPGwXGZZszXQBGrC4SOvH1mK331tcVg4uc6bbgKvgnNdpz/5DpAF+YCv6YVUellvwgTrvmA2bqLEWJv3pHVN0teeo6ejlemW0qyngO7zo+vxA8WHvUVXHjedPkoP/n3tuatSt5nJVzkc2MyAIFZe00O58=
+    - secure: Fg9XuL19cAtCcJP8LLiNz9gJXkd3cr3bAR/W7EWUFygE7VdS3T1rwvLE4bMycpnCtxLro118OgetjY3QAcPknRiSedwTQJNjZHhVTCQ2mFsZ8HcP0id8NDZYyQ+w2FMByGxvAEjdisxen4T+GYmoDm+qUrXMX07NC2ONcwEKJxvV51MaYmFwRee6s9/m4fbKuwvY3y6OdFYwStLxU5OyY213Auq1YniF5JOC8EMH+nVBJ0rcJGVMluiDrXjQNUv3DSh9gPIXVxPDD2nBc6WcwgcWXB/qUYJNBeJbP7ZYv/F6bjzV4/unhSXPwlCPFxGzxx7tJ4FdtVXPdDX0b94E5CsiyXGmt9UFAcdkW90BBakXEiOlfDrfZ/1tN0t7Wkz5eqiGNw013D5RWPlyh2Rba6C+coCWViq2y3w9itOPuT6RtUY+pzjlvmncSVRGaZZPsuUyG9Nh6IKvHO4M5wFQwJ9iQLSad48jzdYXHUztKoscByCX82sYTd389TTtOkOKa7gdh92fQLRQJ9FJi5WQEygBED81sFkOD8+KzimtQgZQmjZC+QAs75Vyd+XEsUhCV8b7S2t+DReVw28xtarE3Vk1lBjucZy0SkbjJQRsSLegPu6+AlPis3jJDkYDLcHRWjt5ToUJqGuCzyjS/ZEELMgAsCNy4PsVDPWS5fVO7ck=
+before_install:
+- sudo apt-get update
+- sudo apt-get install --assume-yes fonts-liberation libappindicator1
+- wget -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+- sudo dpkg -i /tmp/chrome.deb
+- export CHROME_BIN=google-chrome-stable
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+before_script:
+- npm install -g gulp bower
+- bower i
+script: gulp unit && gulp e2e
+notifications:
+  email: false
