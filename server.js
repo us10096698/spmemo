@@ -10,7 +10,7 @@ var config = require(__dirname + '/config/env.json')[process.env.NODE_ENV || 'de
 var hub = require(__dirname + '/app/routes/hub');
 var app = express();
 
-var port = config.appPort;
+var port = config.appPort || process.env.PORT;
 
 exports.start = function() {
   if (!this.server) {
@@ -36,7 +36,7 @@ exports.start = function() {
 
     app.use(session(session_opt));
 
-    // app.use(requireHTTPS);
+    if (process.env.NODE_ENV == 'production') app.use(requireHTTPS);
 
     // routes
     app.use('/api/hub', hub);

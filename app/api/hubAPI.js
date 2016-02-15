@@ -55,6 +55,10 @@ function auth(req, res) {
   if (req.session.access_token) {
     res.redirect(302, config.serviceUrl);
 
+  } else if (config.accessToken) {
+    req.session.access_token = config.accessToken;
+    res.redirect(302, config.serviceUrl);
+
   } else if (req.query.code == undefined ) {
     getCode(req, res);
 
@@ -116,16 +120,16 @@ function getCode(req, res) {
 }
 
 function signOut(req, res) {
-  req.session.destroy(function(err){
-    if(err!=undefined) console.log(err);
+  req.session.destroy(function(err) {
+    if (err != undefined) console.log(err);
   });
   res.redirect(302, config.serviceUrl);
 }
 
 function getStatus(req, res) {
   var status = false;
-  if(req.session.access_token) status = true;
-  res.send({"status": status});
+  if (req.session.access_token) status = true;
+  res.send({'status': status});
 }
 
 module.exports = {

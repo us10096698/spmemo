@@ -1,7 +1,6 @@
 {
   "extends": [
-    "eslint:recommended",
-    "angular"
+    "eslint:recommended"
     ],
   "env": {
     "es6": true,

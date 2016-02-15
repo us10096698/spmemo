@@ -20,4 +20,6 @@ do
   sed -i "" "s/myapp/$APPNAME/g" $file
 done
 
+npm i && bower i
+
 set +x
