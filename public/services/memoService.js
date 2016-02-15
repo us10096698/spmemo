@@ -26,7 +26,7 @@ function memoService($filter, marked, storageService) {
   function getByIndex(index) {
     var item = {};
 
-    if(typeof index != 'undefined') {
+    if (typeof index != 'undefined') {
 
       angular.extend(item, sessionStorage.spmemo[index]);
       item.code = item.code.concat();
@@ -78,7 +78,7 @@ function memoService($filter, marked, storageService) {
     var memo = obj[memoIdx];
     var code = memo['code'];
 
-    if(code.length == 1){
+    if (code.length == 1) {
       obj.splice(memoIdx, 1);
     } else {
       code.splice(codeIdx, 1);

@@ -54,7 +54,7 @@ function MainController($http, $document, $uibModal,
     getAllMemos();
   });
 
-  function importMemo(){
+  function importMemo() {
     angular.element('#lefile').click();
   }
 
@@ -120,7 +120,7 @@ function MainController($http, $document, $uibModal,
         vm.repo = githubService.getRepo();
         vm.currentIdx = githubService.getCurrentIdx();
 
-        if(vm.files.length>0) openGithubMemo(0);
+        if (vm.files.length > 0) openGithubMemo(0);
       });
     });
   }
@@ -131,7 +131,7 @@ function MainController($http, $document, $uibModal,
       vm.currentIdx = githubService.getCurrentIdx();
 
       updateExportUrl();
-    }, function(error){
+    }, function(error) {
       toastr.error('Open failed: ' + error);
     });
   }
@@ -179,11 +179,12 @@ function MainController($http, $document, $uibModal,
     githubService.isSignedIn().then(
       function(res) {
         vm.loginstatus = 'false';
-        if(res) {
+        if (res) {
           vm.loginstatus = 'true';
         }
       }, function(err) {
-        toastr.error('Check status failed: ' + err);
-      });
-  };
+      toastr.error('Check status failed: ' + err);
+    });
+  }
+
 }

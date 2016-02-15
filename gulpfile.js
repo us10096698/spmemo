@@ -18,7 +18,7 @@ gulp.task('close_server', function() {
 
 gulp.task('webdriver_update', $.protractor.webdriver_update);
 
-gulp.task('build', ['sass', 'wiredep'], function(){
+gulp.task('build', ['sass', 'wiredep'], function() {
   console.log('Build finished.');
 });
 
@@ -26,7 +26,7 @@ gulp.task('e2e', function() {
   runSequence('start_server', 'protractor', 'close_server');
 });
 
-gulp.task('unit',function() {
+gulp.task('unit', function() {
   runSequence('jasmine', 'karma');
 });
 
@@ -38,7 +38,7 @@ gulp.task('protractor', ['webdriver_update'], function() {
     .on('error', function(e) {throw e;});
 });
 
-gulp.task('karma-build', function(){
+gulp.task('karma-build', function() {
   gulp.src(__dirname + '/karma.conf.js')
     .pipe(wiredep({
       fileTypes: {

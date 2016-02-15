@@ -9,7 +9,7 @@ function githubService($http, $q, $filter, memoService, storageService) {
   var githubService = {};
 
   var sessionStorage = storageService.all();
-  var metadata = sessionStorage.spmemo_metadata 
+  var metadata = sessionStorage.spmemo_metadata;
   var urlPrefix = 'https://api.github.com/repos/';
 
   githubService.getUser = getUser;
@@ -24,7 +24,7 @@ function githubService($http, $q, $filter, memoService, storageService) {
   githubService.isSignedIn = isSignedIn;
 
   return githubService;
-  
+
   function getUser() { return metadata.user; }
   function getRepo() { return metadata.repo; }
   function getFiles() { return metadata.files; }
@@ -36,7 +36,7 @@ function githubService($http, $q, $filter, memoService, storageService) {
         console.log(res);
       }, function error(e) {
         console.log(e);
-      });
+    });
   }
 
   function updateFileList(info) {
@@ -53,7 +53,7 @@ function githubService($http, $q, $filter, memoService, storageService) {
     })
     .then(function success(res) {
 
-      res.data.forEach( function(file, index, object){
+      res.data.forEach( function(file, index, object) {
         fileList.push({
           name: file.name,
           url: file.download_url,
@@ -116,7 +116,7 @@ function githubService($http, $q, $filter, memoService, storageService) {
       port: 3000,
       data: angular.toJson(data)
     }).then(function success(res) {
-      if(res.data.content == undefined) {
+      if (res.data.content == undefined) {
         deferred.reject(res.data.message);
       } else {
         metadata.files.filter( function(item, index) {
@@ -153,7 +153,7 @@ function githubService($http, $q, $filter, memoService, storageService) {
     var ret = -1;
     var fileList = getFiles();
     fileList.filter(function(item, index) {
-      if (item.name == filename){
+      if (item.name == filename) {
         ret = item.sha;
       }
     });

@@ -8,8 +8,8 @@ storageService.$inject = ['$sessionStorage'];
 function storageService($sessionStorage) {
 
   $sessionStorage.$default({
-      spmemo_metadata: {user : '-', repo: '-', files: [], current: undefined },
-      spmemo: []
+    spmemo_metadata: {user : '-', repo: '-', files: [], current: undefined },
+    spmemo: []
   });
 
   return {

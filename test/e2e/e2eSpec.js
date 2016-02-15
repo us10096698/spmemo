@@ -19,7 +19,7 @@ describe('Site', function() {
 
   describe('#Appearance', function() {
     var contentsTbl;
-    
+
     beforeEach(function() {
       contentsTbl = $('#contentsTbl');
     });
@@ -28,7 +28,7 @@ describe('Site', function() {
       expect(contentsTbl.isPresent()).toBe(true);
       expect($$('tr.item').count()).toBe(0);
     });
-  
+
     it('should display header contents', function() {
       expect(addLink.isPresent()).toBe(true);
       expect(importLink.isPresent()).toBe(true);
@@ -73,7 +73,7 @@ describe('Site', function() {
       addCodeBox.click();
       addCodeBox.click();
       expect($$('.code-box').count()).toBe(2);
-    })
+    });
 
     it('should add a memo with multiple codes', function() {
       titleBox.clear().sendKeys('memo2');
@@ -125,7 +125,7 @@ describe('Site', function() {
       var memo = $('tr#item0');
       expect($$('tr.item').count()).toBe(1);
       expect(memo.$('.title').getText()).toBe('title');
-    })
+    });
   });
 
   describe('#delete', function() {
@@ -286,7 +286,7 @@ describe('Site', function() {
     var repo = $('#repo-name');
     var saveButton = $('#save');
     var cancelButton = $('#cancel');
-    var errors = $$('.error-msg')
+    var errors = $$('.error-msg');
 
     it('should show a header-link and modal dialog', function() {
       $('i.fa-github').click();
@@ -308,7 +308,7 @@ describe('Site', function() {
       expect(errors.get(1).getText()).toBe('Repository name must not be empty.');
     });
 
-    it('should show the filelist of the linked Github Project', function(){
+    it('should show the filelist of the linked Github Project', function() {
       connectToTestRepo();
       var files = $$('.file');
 

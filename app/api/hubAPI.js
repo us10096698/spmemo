@@ -9,13 +9,13 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 function saveFile(req, res) {
   var pathPrefix = config.proxy ? 'https://api.github.com/repos/' : '/repos/';
-  var body = req.body;
-  var path = body.path;
-  var buffer = new Buffer(body.content);
+  var reqBody = req.body;
+  var path = reqBody.path;
+  var buffer = new Buffer(reqBody.content);
   var putData = JSON.stringify({
-    'sha' : body.sha,
+    'sha' : reqBody.sha,
     'content': buffer.toString('base64'),
-    'message': body.message
+    'message': reqBody.message
   });
   var options = {
     host: config.proxy ? config.proxy.host : 'api.github.com',

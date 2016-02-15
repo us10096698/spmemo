@@ -17,7 +17,7 @@ describe('githubService', function() {
   });
 
   it('#updateFilelist should return a valid file list', function() {
-    
+
     var data = [
       {name: 'test1.json', download_url: 'http://example.com/test1.json', sha: '123456'},
       {name: 'test2.json', download_url: 'http://example.com/test2.json', sha: '234567'},
@@ -34,7 +34,7 @@ describe('githubService', function() {
           {name: 'test2.json', url: 'http://example.com/test2.json', sha: '234567'},
           {name: 'test3.json', url: 'http://example.com/test3.json', sha: '345678'}
         ];
-    
+
         expect(fileList).toEqual(expectedFileList);
         expect(githubService.getUser()).toBe('testuser');
         expect(githubService.getRepo()).toBe('testrepo');
@@ -47,7 +47,7 @@ describe('githubService', function() {
     var data = [{title: 'test1', doc: 'doc', code: 'code'}];
 
     spyOn(githubService, 'getFiles').and.returnValue([
-          {name: 'test.json', url: 'https://api.github.com/repos/testuser/testrepo/contents/data/test.json', sha: '123456'},
+          {name: 'test.json', url: 'https://api.github.com/repos/testuser/testrepo/contents/data/test.json', sha: '123456'}
     ]);
 
     $httpBackend.expectGET('https://api.github.com/repos/testuser/testrepo/contents/data/test.json').respond(data);
@@ -64,7 +64,7 @@ describe('githubService', function() {
     var filename = 'hoge';
 
     spyOn(githubService, 'getFiles').and.returnValue([
-          {name: filename, url: 'fakeUrl', sha: 'fakesha'},
+          {name: filename, url: 'fakeUrl', sha: 'fakesha'}
     ]);
     spyOn(githubService, 'getCurrentIdx').and.returnValue(0);
 
