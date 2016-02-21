@@ -1,0 +1,7 @@
+applications:
+- name: spmemo
+  memory: 256MB
+  command: npm start
+  env:
+    SPMEMO_SERVICE_URL: https://spmemo.mybluemix.net
+    SPMEMO_USE_PROXY: false

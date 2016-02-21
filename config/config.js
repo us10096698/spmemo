@@ -14,7 +14,13 @@ function configFactory() {
   ret.saveHost = isProxy ? process.env.PROXY_HOST : 'api.github.com';
 
   ret.serviceUrl = process.env.SPMEMO_SERVICE_URL;
-  ret.servicePort = process.env.SPMEMO_PORT;
+
+  if (process.env.NODE_ENV == 'production') {
+    ret.servicePort = require('cfenv').getAppEnv().port;
+  } else {
+    ret.servicePort = 3000;
+  }
+
   ret.accessToken = process.env.SPMEMO_ACCESS_TOKEN;
 
   ret.clientId = upsenv.cid || process.env.SPMEMO_CLIENT_ID;
